@@ -1,15 +1,89 @@
 <!DOCTYPE html>
 <html lang="en">
-    <head>
-        <meta charset="UTF-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title>BiteMap</title>
-        <link rel="stylesheet" href="/stylesheets/style.css">
-    </head>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BiteMap - Discover Your Next Bite</title>
+    <link rel="stylesheet" href="/sylesheets/style.css">
+    <link rel="icon" href="/favicon/icons8-food-bar-100.png" type="image">
+</head>
+<body>
+    <!-- Nav Bar -->
+    <header>
+        <div class="container">
+            <h1 class="logo">BiteMap</h1>
+            <nav>
+                <ul class="nav-links">
+                    <li><a href="#home">Home</a></li>
+                    <li><a href="#about">About Us</a></li>
+                    <li><a href="#services">Services</a></li>
+                    <li><a href="#contact">Contact Us</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
 
-    <body>
-        <h1>Welcome to BiteMap!</h1>
-        <script src="/javascripts/index.js"></script>
-    </body>
+    <!-- Hero Section -->
+    <section id="home" class="hero">
+        <div class="hero-content">
+            <h2>Discover Your Next Bite</h2>
+            <p>Explore top-rated dishes, tailored to your taste. BiteMap helps you make informed dining decisions with ease.</p>
+            <a href="#services" class="cta-button">Get Started</a>
+        </div>
+    </section>
 
+    <!-- About Us Section -->
+    <section id="about" class="about">
+        <div class="container">
+            <h2>About Us</h2>
+            <p>
+                At BiteMap, we’re passionate food enthusiasts committed to redefining how you explore and enjoy your meals. 
+                Our mission is to provide personalized dining experiences by focusing on individual menu items rather than 
+                just restaurants, helping you find hidden culinary gems that suit your unique taste.
+            </p>
+        </div>
+    </section>
+
+    <!-- Services Section -->
+    <section id="services" class="services">
+        <div class="container">
+            <h2>Our Services</h2>
+            <div class="service-grid">
+                <div class="service-card">
+                    <h3>Personalized Recommendations</h3>
+                    <p>Get dish recommendations tailored to your dietary needs and preferences.</p>
+                </div>
+                <div class="service-card">
+                    <h3>Discover Top-Rated Dishes</h3>
+                    <p>Explore highly-rated dishes from your favorite restaurants.</p>
+                </div>
+                <div class="service-card">
+                    <h3>Advanced Filtering</h3>
+                    <p>Filter dishes by ingredients, spice levels, or dietary restrictions.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Contact Us Section -->
+    <section id="contact" class="contact">
+        <div class="container">
+            <h2>Contact Us</h2>
+            <p>Have questions or suggestions? We’d love to hear from you!</p>
+            <form action="#" method="post" class="contact-form">
+                <input type="text" name="name" placeholder="Your Name" required>
+                <input type="email" name="email" placeholder="Your Email" required>
+                <textarea name="message" placeholder="Your Message" required></textarea>
+                <button type="submit" class="submit-button">Send Message</button>
+            </form>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+        <div class="container">
+            <p>&copy; 2024 BiteMap. All Rights Reserved.</p>
+        </div>
+    </footer>
+</body>
 </html>
