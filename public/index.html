@@ -6,31 +6,49 @@
     <title>BiteMap - Discover Your Next Bite</title>
     <link rel="stylesheet" href="/sylesheets/style.css">
     <link rel="icon" href="/favicon/icons8-food-bar-100.png" type="image">
+    <script src="/javascripts/index.js"></script>
 </head>
 <body>
     <!-- Nav Bar -->
     <header>
         <div class="container">
-            <h1 class="logo">BiteMap</h1>
+            <h1 class="logo">
+                <img src="/favicon/icons8-food-bar-100.png" alt="BiteMap Logo" class="logo-icon">
+                BiteMap
+            </h1>
             <nav>
                 <ul class="nav-links">
                     <li><a href="#home">Home</a></li>
-                    <li><a href="#about">About Us</a></li>
                     <li><a href="#services">Services</a></li>
-                    <li><a href="#contact">Contact Us</a></li>
+                    <li><button class="signup-btn">Sign Up!</button></li>
                 </ul>
             </nav>
         </div>
     </header>
+       
 
-    <!-- Hero Section -->
+    <!-- Hero Content -->
     <section id="home" class="hero">
         <div class="hero-content">
-            <h2>Discover Your Next Bite</h2>
-            <p>Explore top-rated dishes, tailored to your taste. BiteMap helps you make informed dining decisions with ease.</p>
-            <a href="#services" class="cta-button">Get Started</a>
+            <div class="overlay">
+                <h2>Discover Your Next Bite</h2>
+                <p>Find the best dishes near you tailored to your taste!</p>
+                <div class="search-form">
+                    <div class="restaurant-input">
+                        <input type="text" id="restaurant" placeholder="What's Your Next Bite?" required>
+                        <button type="button" id="surprise-me" class="surprise-me-btn">Surprise Me</button>
+                    </div>
+                    
+                    <div class="location-input">
+                        <input type="text" id="location" placeholder="Enter location" required>
+                        <button type="button" id="current-location" class="current-location-btn">Locate Me</button>
+                    </div>
+                    <button type="submit" class="search-btn">Find My Next Bite 😋</button>
+                </div>                
+            </div>
         </div>
-    </section>
+    </section>    
+    
 
     <!-- About Us Section -->
     <section id="about" class="about">
@@ -41,8 +59,44 @@
                 Our mission is to provide personalized dining experiences by focusing on individual menu items rather than 
                 just restaurants, helping you find hidden culinary gems that suit your unique taste.
             </p>
+            <div class="team-grid">
+                <!-- Hrudhai -->
+                <div class="team-card">
+                    <img src="/images/hrudhaiPFP.jpeg" alt="Hrudhai Umas headshot" class="team-photo">
+                    <h3>Hrudhai Umas</h3>
+                    <p>Major: Informatics & Data Science</p>
+                    <p>Class of 2026</p>
+                    <a href="https://linkedin.com/in/hrudhai-umas" target="_blank" class="linkedin-link">LinkedIn</a>
+                </div>
+                <!-- Kaden -->
+                <div class="team-card">
+                    <img src="/images/KadenPFP.jpeg" alt="Kaden Kapadia headshot" class="team-photo">
+                    <h3>Kaden Kapadia</h3>
+                    <p>Major: Informatics & Data Science</p>
+                    <p>Class of 2026</p>
+                    <a href="https://www.linkedin.com/in/kadenkapadia/" target="_blank" class="linkedin-link">LinkedIn</a>
+                </div>
+                <!-- Kush -->
+                <div class="team-card">
+                    <img src="/images/member3.jpg" alt="Kush Doe headshot" class="team-photo">
+                    <h3>Kush Doe</h3>
+                    <p>Major: Computer Science</p>
+                    <p>Class of 2026</p>
+                    <a href="https://linkedin.com/in/" target="_blank" class="linkedin-link">LinkedIn</a>
+                </div>
+                <!-- An -->
+                <div class="team-card">
+                    <img src="/images/member4.jpg" alt="An Doe headshot" class="team-photo">
+                    <h3>An Doe</h3>
+                    <p>Major: Data Analytics</p>
+                    <p>Class of 2026</p>
+                    <a href="https://linkedin.com/in/" target="_blank" class="linkedin-link">LinkedIn</a>
+                </div>
+            </div>
         </div>
     </section>
+
+    
 
     <!-- Services Section -->
     <section id="services" class="services">

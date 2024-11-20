@@ -7,12 +7,32 @@ body {
 }
 
 .container {
-    width: 90%;
+    width: 100%;
     max-width: 1200px;
     margin: 0 auto;
+    padding: 0 2rem; 
 }
 
-/* Header and Navigation */
+/* Logo Style For Header */
+.logo {
+    display: flex;
+    align-items: center;
+    font-size: 1.8rem;
+    font-weight: bold;
+    text-transform: uppercase;
+    color: #fff;
+    gap: 0.5rem;
+    margin: 0;
+}
+
+.logo img {
+    height: 40px; 
+    width: 40px;
+    object-fit: contain;
+}
+
+
+/* Header Style */
 header {
     background: #ff6f61;
     color: #fff;
@@ -23,22 +43,34 @@ header {
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
 }
 
+header .container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0 2rem;
+}
+
 header .logo {
-    font-size: 2rem;
+    margin: 0; 
+    font-size: 1.8rem;
     font-weight: bold;
+    text-transform: uppercase;
+    flex: 1; 
+    text-align: left;
+}
+
+header nav {
+    flex: 1;
+    display: flex;
+    justify-content: flex-end;
 }
 
 header .nav-links {
     list-style: none;
     display: flex;
-    justify-content: flex-end;
-    gap: 1.5rem;
+    gap: 2rem;
     margin: 0;
     padding: 0;
-}
-
-header .nav-links li {
-    display: inline;
 }
 
 header .nav-links a {
@@ -52,17 +84,45 @@ header .nav-links a:hover {
     text-decoration: underline;
 }
 
+/* Sign Up Button Styles */
+.signup-btn {
+    background: white;
+    color: #ff6f61;
+    border: none;
+    font-size: 1rem;
+    padding: 0.5rem 1rem;
+    border-radius: 5px;
+    cursor: pointer;
+    font-weight: bold;
+    text-transform: uppercase;
+}
+
 /* Hero Section */
 .hero {
-    background: url('https://source.unsplash.com/1600x800/?food') no-repeat center center/cover;
+    background: url('/images/calista-resort-hotel-blog-yemek-cesitleri-banner.webp');
+    position: relative;
     color: #fff;
     text-align: center;
     padding: 5rem 0;
 }
 
+.hero-content {
+    position: relative;
+    z-index: 2;
+}
+
+.hero-content .overlay {
+    background: rgba(0, 0, 0, 0.6);
+    /* display: inline-block; */
+    padding: 2rem;
+    border-radius: 10px;
+    text-align: center;
+}
+
 .hero h2 {
     font-size: 3rem;
     margin-bottom: 1rem;
+    font-family: 'Poppins', sans-serif;
 }
 
 .hero p {
@@ -70,40 +130,238 @@ header .nav-links a:hover {
     margin-bottom: 2rem;
 }
 
-.hero .cta-button {
-    background: #fff;
-    color: #ff6f61;
-    padding: 0.8rem 2rem;
-    text-transform: uppercase;
-    font-size: 1rem;
-    font-weight: bold;
-    border-radius: 25px;
-    text-decoration: none;
+/* Search Form Styling */
+.search-form {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    align-items: center;
+    margin-top: 2rem;
+    width: 100%;
+    max-width: 600px;
+    margin: 0 auto; 
 }
 
-.hero .cta-button:hover {
-    background: #ff6f61;
-    color: #fff;
+.search-form input {
+    padding: 0.8rem;
+    font-size: 1rem;
+    border-radius: 5px;
+    border: 1px solid #ddd;
+    width: 100%;
+    box-sizing: border-box;
 }
+
+.search-form .location-input {
+    display: flex;
+    width: 100%;
+}
+
+.location-input input {
+    flex: 1; 
+    border-top-right-radius: 0;
+    border-bottom-right-radius: 0;
+}
+
+.location-input .current-location-btn {
+    background: #ff6f61;
+    color: white;
+    border: none;
+    padding: 0.8rem 1rem;
+    cursor: pointer;
+    border-radius: 0 5px 5px 0;
+    font-size: 1rem;
+    text-transform: uppercase;
+    font-weight: bold;
+}
+
+.search-form .search-btn {
+    background: #ff6f61;
+    color: white;
+    border: none;
+    padding: 0.8rem 2rem;
+    border-radius: 25px;
+    font-size: 1rem;
+    cursor: pointer;
+    text-transform: uppercase;
+    font-weight: bold;
+    width: 100%;
+}
+
+.search-form .search-btn:hover {
+    background: #ff9671;
+}
+
+.search-form input:focus,
+.search-form button:focus {
+    outline: none;
+    border: 1px solid #ff6f61;
+}
+
+.search-form input, .search-form button {
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+/* Styling for Surprise Me Button */
+/* Styling for the Restaurant Input Section */
+.restaurant-input {
+    display: flex;
+    width: 100%; /* Full width of the container */
+}
+
+.restaurant-input input {
+    flex: 1; /* Input takes available space */
+    padding: 0.8rem;
+    font-size: 1rem;
+    border-radius: 5px 0 0 5px; /* Rounded corners for the left side */
+    border: 1px solid #ddd;
+    box-sizing: border-box;
+}
+
+/* Surprise Me Button */
+.surprise-me-btn {
+    background: #ff6f61;
+    color: white;
+    border: none;
+    padding: 0.8rem .48rem;
+    cursor: pointer;
+    font-size: 1rem;
+    text-transform: uppercase;
+    font-weight: bold;
+    border-radius: 0 5px 5px 0;
+    transition: background 0.3s ease;
+}
+
+.surprise-me-btn:hover {
+    background: #ff9671;
+}
+
+
 
 /* About Us Section */
 .about {
-    padding: 3rem 0;
-    background: #f4f4f4;
+    padding: 4rem 2rem;
+    background: #f9f9f9; 
     text-align: center;
 }
 
 .about h2 {
-    font-size: 2rem;
-    margin-bottom: 1rem;
+    font-size: 2.5rem;
+    margin-bottom: 0.5rem;
+    color: #333;
+    font-weight: bold;
+    text-transform: uppercase;
+    letter-spacing: 2px;
 }
 
 .about p {
-    font-size: 1.1rem;
+    font-size: 1.2rem;
+    color: #666;
     line-height: 1.8;
+    max-width: 800px;
+    margin: 0 auto 3rem;
 }
 
+/* Separator Line Below Heading */
+.about h2::after {
+    content: '';
+    display: block;
+    width: 100px;
+    height: 3px;
+    margin: 1rem auto;
+    background: #ff6f61;
+    border-radius: 5px;
+}
+
+/* Team Grid */
+.team-grid {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 2rem;
+    justify-content: center;
+}
+
+/* Team Card */
+.team-card {
+    background: #fff;
+    border: 1px solid #ddd;
+    border-radius: 10px;
+    padding: 1.5rem;
+    text-align: center;
+    width: 300px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    overflow: hidden;
+}
+
+.team-card:hover {
+    transform: translateY(-8px);
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+}
+
+/* Team Photo */
+.team-photo {
+    width: 120px;
+    height: 120px;
+    border-radius: 50%;
+    object-fit: cover;
+    margin-bottom: 1rem;
+    border: 3px solid #ff6f61;
+}
+
+/* Team Member Name */
+.team-card h3 {
+    font-size: 1.4rem;
+    font-weight: bold;
+    margin-bottom: 0.5rem;
+    color: #333;
+}
+
+/* Team Details */
+.team-card p {
+    font-size: 1rem;
+    color: #666;
+    margin: 0.5rem 0;
+}
+
+/* LinkedIn Button */
+.linkedin-link {
+    display: inline-block;
+    margin-top: 1rem;
+    text-decoration: none;
+    color: #0077b5;
+    font-weight: bold;
+    font-size: 1rem;
+    padding: 0.6rem 1.2rem;
+    border: 2px solid #0077b5;
+    border-radius: 25px;
+    transition: background 0.3s ease, color 0.3s ease;
+}
+
+.linkedin-link:hover {
+    background: #0077b5;
+    color: #fff;
+}
+
+/* Responsive Adjustments for our cards*/
+@media (max-width: 768px) {
+    .team-card {
+        width: 100%;
+    }
+}
+
+
 /* Services Section */
+
+.services h2::after {
+    content: '';
+    display: block;
+    width: 100px;
+    height: 3px;
+    margin: 1rem auto;
+    background: #ff6f61;
+    border-radius: 5px;
+}
+
 .services {
     padding: 3rem 0;
     text-align: center;
@@ -141,7 +399,23 @@ header .nav-links a:hover {
     font-size: 1rem;
 }
 
+.service-card:hover {
+    transform: translateY(-8px);
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15); 
+}
+
 /* Contact Section */
+
+.contact h2::after {
+    content: '';
+    display: block;
+    width: 100px;
+    height: 3px;
+    margin: 1rem auto;
+    background: #ff6f61;
+    border-radius: 5px;
+}
+
 .contact {
     padding: 3rem 0;
     background: #f4f4f4;
