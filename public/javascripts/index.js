@@ -1,8 +1,6 @@
 // Created method to be able to get the current location of user!
-function getCurrentLocation() 
-{
-    if (navigator.geolocation) 
-    {
+function getCurrentLocation() {
+    if (navigator.geolocation) {
         navigator.geolocation.getCurrentPosition(
             (position) => {
                 const { latitude, longitude } = position.coords;
@@ -18,8 +16,7 @@ function getCurrentLocation()
 }
 
 // handle the search form submission TODO NEED TO DO ALG HERE (this also isnt working idk why :( ))
-function handleSearchForm(event) 
-{
+function handleSearchForm(event) {
     event.preventDefault();
     const food = document.getElementById('restaurant').value;
     const location = document.getElementById('location').value;
@@ -50,7 +47,7 @@ function attachEventListeners() {
             'Pho',
             'Tiramisu'
         ];
-        
+
         const randomIndex = Math.floor(Math.random() * randomDishes.length);
         document.getElementById('restaurant').value = randomDishes[randomIndex];
         alert(`Surprise! How about trying: ${randomDishes[randomIndex]}?`);
