@@ -6,7 +6,7 @@
     <title>BiteMap - Discover Your Next Bite</title>
     <link rel="stylesheet" href="/sylesheets/style.css">
     <link rel="icon" href="/favicon/icons8-food-bar-100.png" type="image">
-    <script src="/javascripts/index.js"></script>
+    <script src="/javascripts/index.js" defer></script>
 </head>
 <body>
     <!-- Nav Bar -->
@@ -26,7 +26,6 @@
         </div>
     </header>
 
-
     <!-- Hero Content -->
     <section id="home" class="hero">
         <div class="hero-content">
@@ -45,15 +44,16 @@
                     </div>
                     <button type="submit" class="search-btn">Find My Next Bite 😋</button>
                 </form>
+
+                <!-- Suggestion Message -->
+                <div id="suggestion" style="margin-top: 20px; font-size: 1.2em; font-weight: bold; color: #ff6347; text-align: center;"></div>
             </div>
         </div>
     </section>
 
-
     <section id="search-results" class="search-results">
         
     </section>
-
 
     <!-- About Us Section -->
     <section id="about" class="about">
@@ -100,8 +100,6 @@
             </div>
         </div>
     </section>
-
-
 
     <!-- Services Section -->
     <section id="services" class="services">
