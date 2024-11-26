@@ -16,7 +16,7 @@ function getCurrentLocation() {
 }
 
 // handle the search form submission TODO NEED TO DO ALG HERE (this also isnt working idk why :( ))
-function handleSearchForm() {
+function handleSearchForm(event) {
     event.preventDefault();
     const food = document.getElementById('restaurant').value;
     const location = document.getElementById('location').value;
