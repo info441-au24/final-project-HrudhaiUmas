@@ -31,28 +31,31 @@
         <div class="hero-content">
             <div class="overlay">
                 <h2>Discover Your Next Bite</h2>
-                <p>Find the best dishes near you tailored to your taste!</p>
+                <p>Find the best dishes in Seattle, tailored to your taste!</p>
                 <form class="search-form">
                     <div class="restaurant-input">
-                        <input type="text" id="restaurant" placeholder="What's Your Next Bite?" required>
-                        <button type="button" id="surprise-me" class="surprise-me-btn">Surprise Me</button>
-                    </div>
-
-                    <div class="location-input">
-                        <input type="text" id="location" placeholder="Enter location" required>
-                        <button type="button" id="current-location" class="current-location-btn">Locate Me</button>
+                        <select id="cuisine-dropdown" class="cuisine-dropdown">
+                            <option value="" disabled selected>Select a cuisine</option>
+                            <option value="any">Any</option>
+                            <option value="italian">Italian</option>
+                            <option value="chinese">Chinese</option>
+                            <option value="mexican">Mexican</option>
+                            <option value="indian">Indian</option>
+                            <option value="japanese">Japanese</option>
+                            <option value="french">French</option>
+                            <option value="american">American</option>
+                        </select>
                     </div>
                     <button type="submit" class="search-btn">Find My Next Bite 😋</button>
                 </form>
-
+                
                 <!-- Suggestion Message -->
-                <div id="suggestion" style="margin-top: 20px; font-size: 1.2em; font-weight: bold; color: #ff6347; text-align: center;"></div>
+                <div id="suggestion" style="margin-top: 20px; font-size: 1.2em; font-weight: bold; color: #ff6347; text-align: center;"></div>                
             </div>
         </div>
     </section>
 
     <section id="search-results" class="search-results">
-        
     </section>
 
     <!-- About Us Section -->
@@ -91,7 +94,7 @@
                 </div>
                 <!-- An -->
                 <div class="team-card">
-                    <img src="/images/member4.jpg" alt="An Doe headshot" class="team-photo">
+                    
                     <h3>An Nguyen</h3>
                     <p>Major: Informatics</p>
                     <p>Class of 2027</p>

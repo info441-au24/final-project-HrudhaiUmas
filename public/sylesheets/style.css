@@ -31,7 +31,6 @@ body {
     object-fit: contain;
 }
 
-
 /* Header Style */
 header {
     background: #ff6f61;
@@ -113,7 +112,6 @@ header .nav-links a:hover {
 
 .hero-content .overlay {
     background: rgba(0, 0, 0, 0.6);
-    /* display: inline-block; */
     padding: 2rem;
     border-radius: 10px;
     text-align: center;
@@ -151,29 +149,6 @@ header .nav-links a:hover {
     box-sizing: border-box;
 }
 
-.search-form .location-input {
-    display: flex;
-    width: 100%;
-}
-
-.location-input input {
-    flex: 1; 
-    border-top-right-radius: 0;
-    border-bottom-right-radius: 0;
-}
-
-.location-input .current-location-btn {
-    background: #ff6f61;
-    color: white;
-    border: none;
-    padding: 0.8rem 1rem;
-    cursor: pointer;
-    border-radius: 0 5px 5px 0;
-    font-size: 1rem;
-    text-transform: uppercase;
-    font-weight: bold;
-}
-
 .search-form .search-btn {
     background: #ff6f61;
     color: white;
@@ -201,23 +176,40 @@ header .nav-links a:hover {
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
 }
 
-/* Styling for Surprise Me Button */
-/* Styling for the Restaurant Input Section */
-.restaurant-input {
-    display: flex;
-    width: 100%; /* Full width of the container */
-}
-
-.restaurant-input input {
-    flex: 1; /* Input takes available space */
-    padding: 0.8rem;
+.cuisine-dropdown {
+    background: #ffffff;
+    color: #ff6f61;
+    border: none;
+    padding: 0.8rem 2rem;
+    border-radius: 25px;
     font-size: 1rem;
-    border-radius: 5px 0 0 5px; /* Rounded corners for the left side */
-    border: 1px solid #ddd;
-    box-sizing: border-box;
+    cursor: pointer;
+    text-transform: uppercase;
+    font-weight: bold;
+    width: 258%; /* Matches the button width */
+    margin: 0 auto; /* Centers the dropdown */
+    text-align: center; /* Centers the text */
+    box-sizing: border-box; /* Ensures padding is included in width */
+    transform: translateX(-185px);
 }
 
-/* Surprise Me Button */
+/* adding this here for reference
+.search-form .search-btn {
+    background: #ff6f61;
+    color: white;
+    border: none;
+    padding: 0.8rem 2rem;
+    border-radius: 25px;
+    font-size: 1rem;
+    cursor: pointer;
+    text-transform: uppercase;
+    font-weight: bold;
+    width: 100%;
+}
+*/
+
+/* Styling for Surprise Me Button - Commented Out */
+/*
 .surprise-me-btn {
     background: #ff6f61;
     color: white;
@@ -234,6 +226,7 @@ header .nav-links a:hover {
 .surprise-me-btn:hover {
     background: #ff9671;
 }
+*/
 
 /* Search Results Section */
 .search-results {
@@ -361,13 +354,12 @@ header .nav-links a:hover {
     color: #fff;
 }
 
-/* Responsive Adjustments for our cards*/
+/* Responsive Adjustments for our cards */
 @media (max-width: 768px) {
     .team-card {
         width: 100%;
     }
 }
-
 
 /* Services Section */
 

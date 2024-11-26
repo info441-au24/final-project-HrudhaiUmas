@@ -1,28 +1,10 @@
-// Function to get the current location of the user
-function getCurrentLocation() {
-    if (navigator.geolocation) {
-        navigator.geolocation.getCurrentPosition(
-            (position) => {
-                const { latitude, longitude } = position.coords;
-                document.getElementById('location').value = `Lat: ${latitude}, Lon: ${longitude}`;
-            },
-            (error) => {
-                alert('Unable to retrieve your location. Please enter it manually.');
-            }
-        );
-    } else {
-        alert('Location service is not supported by your browser.');
-    }
-}
-
 // Function to handle the search form submission
 async function handleSearchForm(event) {
     event.preventDefault();
     const food = document.getElementById('restaurant').value;
-    const location = document.getElementById('location').value;
 
-    if (food && location) {
-        console.log("Searching for food and location...");
+    if (food) {
+        console.log("Searching for food...");
         const searchResultsSection = document.getElementById("search-results");
 
         try {
@@ -49,48 +31,89 @@ async function handleSearchForm(event) {
             searchResultsSection.innerHTML = '<p>Error fetching search results. Please try again later.</p>';
         }
     } else {
-        document.getElementById('suggestion').textContent = 'Please fill in both fields!';
+        document.getElementById('suggestion').textContent = 'Please enter a dish to search!';
     }
 }
 
 // Function to handle "Surprise Me" button click
+// Includes cuisines
 function handleSurpriseMe() {
-    const randomDishes = [
-        'Spaghetti Carbonara',
-        'Sushi Platter',
-        'BBQ Ribs',
-        'Avocado Toast',
-        'Pad Thai',
-        'Cheeseburger',
-        'Vegetarian Pizza',
-        'Butter Chicken',
-        'Pho',
-        'Tiramisu',
-        'Fish Tacos',
-        'Ramen',
-        'Chocolate Lava Cake',
-        'Falafel Wrap',
-        'Chicken Alfredo',
-        'Margherita Pizza',
-        'Lobster Roll',
-        'Greek Salad',
-        'Shawarma',
-        'Crème Brûlée',
-        'Tom Yum Soup',
-        'Steak Frites',
-        'Korean Fried Chicken',
-        'Vegan Buddha Bowl',
-        'Mac and Cheese',
-        'Churros with Chocolate Sauce',
-        'Beef Wellington',
-        'Paneer Tikka',
-        'Tempura Shrimp',
-        'Ice Cream Sundae'
-    ];
+    // Define dishes for each cuisine type
+    const dishesByCuisine = {
+        italian: [
+            'Spaghetti Carbonara',
+            'Margherita Pizza',
+            'Lasagna',
+            'Risotto',
+            'Tiramisu'
+        ],
+        chinese: [
+            'Kung Pao Chicken',
+            'Sweet and Sour Pork',
+            'Spring Rolls',
+            'Fried Rice',
+            'Dumplings'
+        ],
+        mexican: [
+            'Tacos',
+            'Burritos',
+            'Quesadillas',
+            'Enchiladas',
+            'Churros'
+        ],
+        indian: [
+            'Butter Chicken',
+            'Paneer Tikka',
+            'Biryani',
+            'Naan',
+            'Samosas'
+        ],
+        japanese: [
+            'Sushi',
+            'Ramen',
+            'Tempura',
+            'Teriyaki Chicken',
+            'Mochi'
+        ],
+        french: [
+            'Croissant',
+            'Escargot',
+            'Ratatouille',
+            'Crepes',
+            'Crème Brûlée'
+        ],
+        american: [
+            'Cheeseburger',
+            'BBQ Ribs',
+            'Mac and Cheese',
+            'Fried Chicken',
+            'Apple Pie'
+        ]
+    };
 
-    // Select a random dish from the list
-    const randomIndex = Math.floor(Math.random() * randomDishes.length);
-    const suggestion = randomDishes[randomIndex];
+    // Combine all dishes into a single array for the "Any" option
+    const allDishes = Object.values(dishesByCuisine).flat();
+
+    // Get the selected cuisine from the dropdown
+    const selectedCuisine = document.getElementById('cuisine-dropdown').value;
+
+    // Handle the "Any" option
+    let dishes;
+    if (selectedCuisine === 'any') {
+        dishes = allDishes;
+    } else {
+        dishes = dishesByCuisine[selectedCuisine];
+    }
+
+    // If no dishes are found, show an error message
+    if (!dishes || dishes.length === 0) {
+        document.getElementById('suggestion').textContent = 'No dishes found for the selected cuisine!';
+        return;
+    }
+
+    // Get a random dish from the selected cuisine or all dishes
+    const randomIndex = Math.floor(Math.random() * dishes.length);
+    const suggestion = dishes[randomIndex];
 
     // Update the suggestion div with the selected dish
     document.getElementById('suggestion').textContent = `BiteMap suggests you try: ${suggestion}`;
@@ -98,14 +121,12 @@ function handleSurpriseMe() {
 
 // Function to attach event listeners to elements
 function attachEventListeners() {
-    document.getElementById('current-location').addEventListener('click', getCurrentLocation);
-
-    // Attach the Surprise Me handler
-    document.getElementById('surprise-me').addEventListener('click', handleSurpriseMe);
-
-    // Attach the search form handler
-    document.querySelector('.search-form').addEventListener('submit', handleSearchForm);
+    // Attach the handler for the "Find My Next Bite" button
+    document.querySelector('.search-form').addEventListener('submit', (event) => {
+        event.preventDefault(); // Prevent form submission
+        handleSurpriseMe(); // Use the surprise-me logic for dish suggestions
+    });
 }
 
-// Attach event listeners when the DOM is fully loaded
+
 document.addEventListener('DOMContentLoaded', attachEventListeners);
