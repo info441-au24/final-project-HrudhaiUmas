@@ -2,9 +2,10 @@ import mongoose from "mongoose";
 
 let models = {}
 
-await mongoose.connect(
-    // who's mongodb do we want to use?
-);
+console.log("Connecting to MongoDB");
+await mongoose.connect('mongodb+srv://kushp03:IQ1MfG7XzmM3r6yM@cluster0.oq22a.mongodb.net/')
+
+console.log("Successfully connected to mongoDB")
 
 const userSchema = new mongoose.Schema({
     username: String,
