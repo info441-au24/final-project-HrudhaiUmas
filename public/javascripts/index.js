@@ -15,16 +15,37 @@ function getCurrentLocation() {
     }
 }
 
-// handle the search form submission TODO NEED TO DO ALG HERE (this also isnt working idk why :( ))
-function handleSearchForm(event) {
+// handle the search form submission TODO NEED TO DO ALG HERE
+async function handleSearchForm(event) {
     event.preventDefault();
     const food = document.getElementById('restaurant').value;
     const location = document.getElementById('location').value;
 
     if (food && location) {
-        alert(`Searching for "${food}" near "${location}"`);
-        // THIS IS WHERE WE NEED TO DO SEARCH LOGIC
-    } else {
+        // alert(`Searching for "${food}" near "${location}"`);
+        console.log("Inside the if statement for food and location")
+
+        const searchResultsSection = document.getElementById("search-results");
+
+        let searchResultsResponse = await fetch(`api/dishes/search?food=${encodeURIComponent(food)}`)
+
+        console.log(searchResultsResponse);
+
+        let searchResultsJSON = await searchResultsResponse.json();
+
+        console.log("SearchResultsJSON: ", searchResultsJSON)
+
+        let searchResultHTML = searchResultsJSON.map(dish => {
+            return(`
+                <div class="search-results-item">
+                    <p>${dish.name}</p>
+                </div>
+                `)
+        }).join(" ")
+
+        searchResultsSection.innerHTML = searchResultHTML;
+    } 
+    else {
         alert('Please fill in both fields!');
     }
 }
@@ -53,7 +74,6 @@ function attachEventListeners() {
         alert(`Surprise! How about trying: ${randomDishes[randomIndex]}?`);
     });
 
-    // not working for some reason should show an alert
     document.querySelector('.search-form').addEventListener('submit', handleSearchForm);
 }
 

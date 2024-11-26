@@ -26,6 +26,22 @@ const dishSchema = new mongoose.Schema({
 });
 models.Dish = mongoose.model("Dish", dishSchema);
 
+// Below is what the restaurantSchema looks like right now. We will need to change the menu array from a hard-coded String array to an array of
+// DishId's once we make the feature to add dishes.
+
+// {
+//     "_id": {
+//       "$oid": "6745692218a8c5347acbeb74"
+//     },
+//     "name": "Pizza on the Ave",
+//     "location": "4801 24th Ave NE, Seattle WA 98105",
+//     "menu": [
+//       "Vegetarian Pizza",
+//       "Meat-Lover's Pizza",
+//       "Pepperoni Pizza",
+//       "Hawaiian Pizza"
+//     ]
+// }
 const restaurantSchema = new mongoose.Schema({
     name: String,
     location: String,

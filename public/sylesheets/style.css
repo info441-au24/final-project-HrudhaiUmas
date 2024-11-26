@@ -235,6 +235,25 @@ header .nav-links a:hover {
     background: #ff9671;
 }
 
+/* Search Results Section */
+.search-results {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-around;
+}
+
+.search-results-item {
+    width: 30%;
+    height: 300px;
+    border-radius: 5px;
+    border: 1px solid black;
+    margin-top: 15px;
+    margin-bottom: 15px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 18px;
+}
 
 
 /* About Us Section */
