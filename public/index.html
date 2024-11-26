@@ -33,7 +33,7 @@
             <div class="overlay">
                 <h2>Discover Your Next Bite</h2>
                 <p>Find the best dishes near you tailored to your taste!</p>
-                <div class="search-form">
+                <form class="search-form" onSubmit="handleSearchForm()">
                     <div class="restaurant-input">
                         <input type="text" id="restaurant" placeholder="What's Your Next Bite?" required>
                         <button type="button" id="surprise-me" class="surprise-me-btn">Surprise Me</button>
@@ -44,7 +44,7 @@
                         <button type="button" id="current-location" class="current-location-btn">Locate Me</button>
                     </div>
                     <button type="submit" class="search-btn">Find My Next Bite 😋</button>
-                </div>
+                </form>
             </div>
         </div>
     </section>

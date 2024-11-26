@@ -16,14 +16,14 @@ function getCurrentLocation() {
 }
 
 // handle the search form submission TODO NEED TO DO ALG HERE (this also isnt working idk why :( ))
-function handleSearchForm(event) {
+function handleSearchForm() {
     event.preventDefault();
     const food = document.getElementById('restaurant').value;
     const location = document.getElementById('location').value;
 
     if (food && location) {
         alert(`Searching for "${food}" near "${location}"`);
-        // THIS IS WHREE WE NEED TO DO SEARCH LOGIC
+        // THIS IS WHERE WE NEED TO DO SEARCH LOGIC
     } else {
         alert('Please fill in both fields!');
     }
