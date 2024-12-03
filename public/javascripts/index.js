@@ -1,6 +1,5 @@
 // Function to handle the search form submission
-async function handleSearchForm(event) {
-    event.preventDefault();
+async function handleCustomSearchForm() {
     const food = document.getElementById('restaurant').value;
 
     if (food) {
@@ -33,6 +32,20 @@ async function handleSearchForm(event) {
     } else {
         document.getElementById('suggestion').textContent = 'Please enter a dish to search!';
     }
+}
+
+function handleCustomSearch() {
+    const searchFormStyle = document.getElementById('search-form').style;
+    searchFormStyle.display = "none";
+
+    const searchContainerStyle = document.getElementById('search-container').style;
+    searchContainerStyle.display = "none";
+
+    const suggestionStyle = document.getElementById('suggestion').style;
+    suggestionStyle.display = "none";
+
+    const customFormStyle = document.getElementById('custom-search-form').style;
+    customFormStyle.display = "block";
 }
 
 // Function to handle "Surprise Me" button click
@@ -117,6 +130,9 @@ function handleSurpriseMe() {
 
     // Update the suggestion div with the selected dish
     document.getElementById('suggestion').textContent = `BiteMap suggests you try: ${suggestion}`;
+
+    const searchContainerStyle = document.getElementById('search-container').style;
+    searchContainerStyle.display = "block";
 }
 
 // Function to attach event listeners to elements
@@ -126,6 +142,15 @@ function attachEventListeners() {
         event.preventDefault(); // Prevent form submission
         handleSurpriseMe(); // Use the surprise-me logic for dish suggestions
     });
+
+    document.querySelector('#search-your-own-btn').addEventListener('click', () => {
+        handleCustomSearch();
+    })
+
+    document.querySelector('.custom-search-form').addEventListener('submit', (event) => {
+        event.preventDefault(); // Prevent form submission
+        handleCustomSearchForm();
+    })
 }
 
 
