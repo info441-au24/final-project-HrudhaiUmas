@@ -10,7 +10,7 @@ body {
     width: 100%;
     max-width: 1200px;
     margin: 0 auto;
-    padding: 0 2rem; 
+    padding: 0 2rem;
 }
 
 /* Logo Style For Header */
@@ -26,7 +26,7 @@ body {
 }
 
 .logo img {
-    height: 40px; 
+    height: 40px;
     width: 40px;
     object-fit: contain;
 }
@@ -50,11 +50,11 @@ header .container {
 }
 
 header .logo {
-    margin: 0; 
+    margin: 0;
     font-size: 1.8rem;
     font-weight: bold;
     text-transform: uppercase;
-    flex: 1; 
+    flex: 1;
     text-align: left;
 }
 
@@ -98,7 +98,7 @@ header .nav-links a:hover {
 
 /* Hero Section */
 .hero {
-    background: url('/images/calista-resort-hotel-blog-yemek-cesitleri-banner.webp');
+    background: url('/images/home-background.webp');
     position: relative;
     color: #fff;
     text-align: center;
@@ -159,7 +159,7 @@ header .nav-links a:hover {
     margin-top: 2rem;
     width: 100%;
     max-width: 600px;
-    margin: 0 auto; 
+    margin: 0 auto;
 }
 
 #custom-search-form div input {
@@ -275,7 +275,7 @@ header .nav-links a:hover {
 /* About Us Section */
 .about {
     padding: 4rem 2rem;
-    background: #f9f9f9; 
+    background: #f9f9f9;
     text-align: center;
 }
 
@@ -435,7 +435,7 @@ header .nav-links a:hover {
 
 .service-card:hover {
     transform: translateY(-8px);
-    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15); 
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
 }
 
 /* Contact Section */
