@@ -67,6 +67,7 @@ header nav {
 header .nav-links {
     list-style: none;
     display: flex;
+    align-items: center;
     gap: 2rem;
     margin: 0;
     padding: 0;
@@ -91,15 +92,19 @@ header .nav-links a:hover {
     background-color:#ff6f61;
 }
 
-.logged-in-header-div button, .logged-in-header-div img {
+.logged-in-header-div .signup-btn, .logged-in-header-div button img {
     display: inline-block;
+}
+
+.logged-in-header-div #user-info-btn {
+    background: none;
+    border: none;
 }
 
 .profile-icon {
     height: 50px;
     width: 50px;
     border-radius: 100%;
-    margin-left: 10px;
 }
 
 /* Sign Up Button Styles */

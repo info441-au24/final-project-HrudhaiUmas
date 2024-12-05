@@ -11,6 +11,7 @@ import About from "./components/About";
 import Services from "./components/Services";
 import Contact from "./components/Contact";
 import Footer from "./components/Footer";
+import UserInfo from "./components/UserInfo";
 
 function App() {
     return (
@@ -30,6 +31,7 @@ function App() {
                         <Route path="/search" element={ <SearchResults /> } />
                         <Route path="/login" element={ <Login /> } />
                         <Route path="/signup" element={ <SignUp /> } />
+                        <Route path="/user-info" element={ <UserInfo />} />
                     </Routes>
                     <Footer />
                 </div>

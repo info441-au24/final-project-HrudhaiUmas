@@ -25,6 +25,10 @@ function Header() {
         }
     };
 
+    const onClickHandler = () => {
+        navigate("/user-info");
+    }
+
     return (
         <header>
             <div className="container">
@@ -45,7 +49,7 @@ function Header() {
                                 >
                                     Sign Out ({user.username})
                                 </button>
-                                <img src={'/images/UserProfileIcon.jpg'} alt="user profile icon" className="profile-icon" />
+                                <button id="user-info-btn" onClick={onClickHandler}> <img src={'/images/UserProfileIcon.jpg'} alt="user profile icon" className="profile-icon" /> </button>
                             </div>
                         ) : (
                             <Link to="/login">
