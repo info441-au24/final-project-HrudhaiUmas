@@ -1,4 +1,6 @@
 import express from "express";
+import models from "../../models.js";
+
 const router = express.Router();
 
 router.get("/login", (req, res) => {
@@ -31,5 +33,24 @@ router.post("/register", async (req, res) => {
         res.status(500).json({ status: "error", error: err });
     }
 });
+
+// This endpoint is not working. Needs to be fixed
+router.post("/dietary-restrictions", async (req, res) => {
+    try {
+        console.log("inside the dietary-restrictions endpoint");
+        const { username, dietaryRestrictions } = req.body;
+
+        const user = await models.User.find({username: username})
+
+        for(let i = 0; i < dietaryRestrictions.length; i++) {
+            user.dietaryRestrictions.push(dietaryRestrictions[i]);
+        }
+
+        user.save();
+    } catch (err) {
+        console.log(err);
+        res.status(500).json({ status: "error", error: err });
+    }
+})
 
 export default router;

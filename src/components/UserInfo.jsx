@@ -1,13 +1,22 @@
 import React, { useState } from "react";
+import { useAuth } from "./AuthContext"
 
 function UserInfo() {
-    const [dieraryRestrictions, setDietaryRestrictions] = useState([]);
+    const [dietaryRestrictions, setDietaryRestrictions] = useState([]);
+    const { user } = useAuth();
 
-    const handleDietarySelection = (event) => {
+    const handleDietarySelection = async (event) => {
         event.preventDefault();
 
         console.log("clicked the dietary restriction button");
-        
+        console.log(user.username);
+        console.log(dietaryRestrictions);
+
+        // This post request is not working. Needs to be fixed
+        await fetch("/users/dietary-restrictions", {
+            method: "POST", 
+            body: {username: user.username, dietaryRestrictions: dietaryRestrictions}
+        });
     }
 
     const handleChange = (event) => {
@@ -19,7 +28,7 @@ function UserInfo() {
         <div className="user-info-container">
             <div className="user-dietary-restrictions">
                 <h1>Your dietary restrictions:</h1>
-                {/* <p>{dieraryRestrictions.join(', ')}</p> */}
+                {/* <p>{dietaryRestrictions.join(', ')}</p> */}
             </div>
             <div className="select-dietary-restrictions">
                 <h1>Select your dietary restrictions</h1>
