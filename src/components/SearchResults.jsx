@@ -103,6 +103,7 @@ function SearchResults() {
         searchResults.length > 0 ? (
             searchResults.map((dish, index) => (
                 <div key={index} className="search-results-item">
+                    <p>Restaurant Name: Pizza on the Ave</p>
                     <p>{dish.name}</p>
                 </div>
             ))
