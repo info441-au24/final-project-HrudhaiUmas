@@ -13,7 +13,9 @@ function Header() {
                 <ul className="nav-links">
                     <li><Link to="/">Home</Link></li>
                     <li><Link to="/services">Services</Link></li>
-                    <li><button className="signup-btn">Sign Up!</button></li>
+                    <li><Link to="/login"><button className="signup-btn">
+                        Sign In
+                    </button></Link></li>
                 </ul>
                 </nav>
             </div>
