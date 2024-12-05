@@ -1,5 +1,5 @@
 import React, { useEffect } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { useAuth } from "./AuthContext";
 
 function Header() {
@@ -14,7 +14,7 @@ function Header() {
         try {
             const response = await fetch("/login/logout", {
                 method: "POST",
-                credentials: "include"
+                credentials: "include",
             });
             if (response.ok) {
                 checkAuth();
@@ -25,9 +25,23 @@ function Header() {
         }
     };
 
+    const handleScrollToTop = () => {
+        navigate("/"); // Navigate to the homepage
+        window.scrollTo({ top: 0, behavior: "smooth" }); // Scroll to the top
+    };
+
+    const handleScrollToServices = () => {
+        const servicesSection = document.getElementById("services");
+        if (servicesSection) {
+            servicesSection.scrollIntoView({ behavior: "smooth" });
+        } else {
+            navigate("/"); // Navigate to homepage if services section is not found
+        }
+    };
+
     const onClickHandler = () => {
         navigate("/user-info");
-    }
+    };
 
     return (
         <header>
@@ -37,29 +51,41 @@ function Header() {
                     BiteMap
                 </h1>
                 <nav>
-                <ul className="nav-links">
-                    <li><Link to="/">Home</Link></li>
-                    <li><Link to="/services">Services</Link></li>
-                    <li>
-                        {user ? (
-                            <div className="logged-in-header-div">
-                                <button
-                                className="signup-btn"
-                                onClick={handleLogout}
-                                >
-                                    Sign Out ({user.username})
-                                </button>
-                                <button id="user-info-btn" onClick={onClickHandler}> <img src={'/images/UserProfileIcon.jpg'} alt="user profile icon" className="profile-icon" /> </button>
-                            </div>
-                        ) : (
-                            <Link to="/login">
-                                <button className="signup-btn">
+                    <ul className="nav-links">
+                        <li>
+                            <button onClick={handleScrollToTop} className="nav-button">
+                                Home
+                            </button>
+                        </li>
+                        <li>
+                            <button onClick={handleScrollToServices} className="nav-button">
+                                Services
+                            </button>
+                        </li>
+                        <li>
+                            {user ? (
+                                <div className="logged-in-header-div">
+                                    <button
+                                        className="signup-btn"
+                                        onClick={handleLogout}
+                                    >
+                                        Sign Out ({user.username})
+                                    </button>
+                                    <button id="user-info-btn" onClick={onClickHandler}>
+                                        <img
+                                            src={"/images/UserProfileIcon.jpg"}
+                                            alt="user profile icon"
+                                            className="profile-icon"
+                                        />
+                                    </button>
+                                </div>
+                            ) : (
+                                <button className="signup-btn" onClick={() => navigate("/login")}>
                                     Sign In
                                 </button>
-                            </Link>
-                        )}
-                    </li>
-                </ul>
+                            )}
+                        </li>
+                    </ul>
                 </nav>
             </div>
         </header>

@@ -84,6 +84,24 @@ header .nav-links a:hover {
     text-decoration: underline;
 }
 
+header .nav-links a,
+header .nav-links button {
+    color: #fff;
+    text-decoration: none;
+    font-size: 1rem;
+    font-weight: bold;
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 0;
+}
+
+header .nav-links a:hover,
+header .nav-links button:hover {
+    text-decoration: underline;
+}
+
+
 .logged-in-header-div {
     white-space: nowrap;
     height: 100%;

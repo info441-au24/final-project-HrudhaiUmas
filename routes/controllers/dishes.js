@@ -1,22 +1,44 @@
 import express from "express";
 import models from "../../models.js";
+
 const router = express.Router();
 
-// Search endpoint
+// Search endpoint with dietary restrictions
 router.get("/search", async (req, res) => {
-    const { food } = req.query;
+    const { food, username } = req.query;
 
     if (!food) {
         return res.status(400).json({ status: "error", error: "Missing 'food' query parameter" });
     }
 
     try {
-        const searchResults = await models.Dish.find({
+        let dietaryRestrictions = [];
+
+        // Fetch dietary restrictions if username is provided
+        if (username) {
+            const user = await models.User.findOne({ username });
+            if (!user) {
+                return res.status(404).json({ status: "error", error: "User not found" });
+            }
+            dietaryRestrictions = user.dietaryRestrictions || [];
+        }
+
+        // Query to fetch dishes based on name and dietary restrictions
+        const query = {
             name: { $regex: food, $options: "i" } // Case-insensitive search
-        });
+        };
+
+        if (dietaryRestrictions.length > 0) {
+            query.tags = { $in: dietaryRestrictions }; // Match dishes with any of the dietary restriction tags
+        }
+
+        const searchResults = await models.Dish.find(query);
 
         const searchResultsJSON = searchResults.map((dish) => ({
-            name: dish.name
+            name: dish.name,
+            tags: dish.tags,
+            ingredients: dish.ingredients,
+            spiceLevel: dish.spiceLevel,
         }));
 
         res.json(searchResultsJSON);
@@ -26,10 +48,26 @@ router.get("/search", async (req, res) => {
     }
 });
 
-// Surprise endpoint
+// Surprise endpoint with dietary restrictions
 router.get("/surprise", async (req, res) => {
+    const { username } = req.query;
+
     try {
-        const dishes = await models.Dish.find(); // Get all dishes from the database
+        let dietaryRestrictions = [];
+
+        // Fetch dietary restrictions if username is provided
+        if (username) {
+            const user = await models.User.findOne({ username });
+            if (!user) {
+                return res.status(404).json({ status: "error", error: "User not found" });
+            }
+            dietaryRestrictions = user.dietaryRestrictions || [];
+        }
+
+        // Query to fetch dishes based on dietary restrictions
+        const query = dietaryRestrictions.length > 0 ? { tags: { $in: dietaryRestrictions } } : {};
+
+        const dishes = await models.Dish.find(query); // Get all dishes that match the query
         if (!dishes.length) {
             return res.status(404).json({ suggestion: "No dishes available" });
         }
