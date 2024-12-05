@@ -13,7 +13,7 @@ function UserInfo() {
         console.log(dietaryRestrictions);
 
         // This post request is not working. Needs to be fixed
-        await fetch("/users/dietary-restrictions", {
+        await fetch("api/users/dietary-restrictions", {
             method: "POST", 
             body: {username: user.username, dietaryRestrictions: dietaryRestrictions}
         });
