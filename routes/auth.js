@@ -15,7 +15,6 @@ async function hashPassword(password, salt) {
     });
 }
 
-// User Strategy
 passport.use(
     "user",
     new LocalStrategy(async function verify(username, password, cb) {
@@ -37,7 +36,6 @@ passport.use(
         }
     })
 );
-
 
 passport.serializeUser((user, cb) => {
     process.nextTick(() => {
