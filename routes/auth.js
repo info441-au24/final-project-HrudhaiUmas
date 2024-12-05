@@ -51,6 +51,25 @@ passport.deserializeUser((user, cb) => {
     });
 });
 
+router.get("/status", (req, res) => {
+    if (req.isAuthenticated()) {
+        res.json({
+            status: "success",
+            authenticated: true,
+            user: {
+                username: req.user.username,
+                preferences: req.user.preferences,
+                dietaryRestrictions: req.user.dietaryRestrictions
+            }
+        });
+    } else {
+        res.json({
+            status: "success",
+            authenticated: false
+        });
+    }
+});
+
 router.post("/", passport.authenticate("local"), (req, res) => {
     res.json({
         status: "success",

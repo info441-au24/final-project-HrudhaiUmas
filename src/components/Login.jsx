@@ -1,8 +1,10 @@
 import React from "react";
 import { useNavigate } from "react-router-dom";
+import { useAuth } from "./AuthContext";
 
 function Login() {
     const navigate = useNavigate();
+    const { checkAuth } = useAuth();
 
     let message = "";
 
@@ -25,6 +27,7 @@ function Login() {
 
             const data = await response.json();
             if (data.status === "success") {
+                await checkAuth();
                 message = "Success!"
                 navigate("/");
             } else {

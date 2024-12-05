@@ -1,7 +1,30 @@
-import React from "react";
-import { Link } from "react-router-dom";
+import React, { useState, useEffect } from "react";
+import { Link, useNavigate } from "react-router-dom";
+import { useAuth } from './AuthContext';
 
 function Header() {
+    const { user, checkAuth } = useAuth();
+    const navigate = useNavigate();
+
+    useEffect(() => {
+        checkAuth();
+    }, []);
+
+    const handleLogout = async () => {
+        try {
+            const response = await fetch("/login/logout", {
+                method: "POST",
+                credentials: "include"
+            });
+            if (response.ok) {
+                checkAuth();
+                navigate("/");
+            }
+        } catch (err) {
+            console.error("Logout failed:", err);
+        }
+    };
+
     return (
         <header>
             <div className="container">
@@ -13,9 +36,22 @@ function Header() {
                 <ul className="nav-links">
                     <li><Link to="/">Home</Link></li>
                     <li><Link to="/services">Services</Link></li>
-                    <li><Link to="/login"><button className="signup-btn">
-                        Sign In
-                    </button></Link></li>
+                    <li>
+                        {user ? (
+                            <button
+                                className="signup-btn"
+                                onClick={handleLogout}
+                            >
+                                Sign Out ({user.username})
+                            </button>
+                        ) : (
+                            <Link to="/login">
+                                <button className="signup-btn">
+                                    Sign In
+                                </button>
+                            </Link>
+                        )}
+                    </li>
                 </ul>
                 </nav>
             </div>
