@@ -9,13 +9,23 @@ function UserInfo() {
         event.preventDefault();
 
         console.log("clicked the dietary restriction button");
-        console.log(user.username);
-        console.log(dietaryRestrictions);
 
+        const currentUsername = user.username;
+        const currentUserRestrictions = dietaryRestrictions;
+
+        console.log(currentUsername);
+        console.log(currentUserRestrictions);
         // This post request is not working. Needs to be fixed
         await fetch("api/users/dietary-restrictions", {
-            method: "POST", 
-            body: {username: user.username, dietaryRestrictions: dietaryRestrictions}
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+                username: currentUsername,
+                dietaryRestrictions: currentUserRestrictions
+            }),
+            credentials: "include"
         });
     }
 

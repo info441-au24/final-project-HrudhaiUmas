@@ -39,12 +39,19 @@ router.post("/dietary-restrictions", async (req, res) => {
     try {
         console.log("inside the dietary-restrictions endpoint");
         const { username, dietaryRestrictions } = req.body;
+        console.log(username)
+        console.log(dietaryRestrictions);
+
+        // console.log(req.body);
 
         const user = await models.User.find({username: username})
 
         for(let i = 0; i < dietaryRestrictions.length; i++) {
-            user.dietaryRestrictions.push(dietaryRestrictions[i]);
+            console.log(dietaryRestrictions[i]);
+            console.log(user.dietaryRestrictions);
         }
+
+        // user.dietaryRestrictions = dietaryRestrictions;
 
         user.save();
     } catch (err) {
