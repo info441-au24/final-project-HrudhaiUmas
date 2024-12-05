@@ -14,8 +14,10 @@ const userSchema = new mongoose.Schema({
     hashed_password: { type: Buffer, required: true },
     salt: { type: Buffer, required: true },
     preferences: [String],
-    dietaryRestrictions: [String]
+    dietaryRestrictions: [String],
+    role: { type: String, required: true, enum: ["user", "restaurant"], default: "user" }
 });
+
 
 userSchema.methods.setPassword = async function(password) {
     this.salt = crypto.randomBytes(16);
@@ -84,7 +86,8 @@ const restaurantSchema = new mongoose.Schema({
     username: { type: String, required: true, unique: true }, 
     hashed_password: { type: Buffer, required: true }, 
     salt: { type: Buffer, required: true }, 
-    menu: [{ type: mongoose.Schema.Types.ObjectId, ref: "Dish" }]
+    menu: [{ type: mongoose.Schema.Types.ObjectId, ref: "Dish" }],
+    role: { type: String, required: true, enum: ["restaurant"], default: "restaurant" }
 });
 
 restaurantSchema.methods.setPassword = async function (password) {

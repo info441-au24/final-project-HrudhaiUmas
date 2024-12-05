@@ -80,6 +80,7 @@ router.post("/register", async (req, res) => {
             username,
             hashed_password: hashedPassword,
             salt: salt,
+            role: "restaurant"
         });
 
         await newRestaurant.save();
@@ -91,56 +92,5 @@ router.post("/register", async (req, res) => {
     }
 });
 
-// Restaurant Login Endpoint
-router.post("/restaurant/login", (req, res, next) => {
-    passport.authenticate("restaurant", (err, user, info) => {
-        if (err) {
-            console.error(err);
-            return res.status(500).json({
-                status: "error",
-                message: "An internal server error occurred. Please try again later.",
-            });
-        }
-        if (!user) {
-            return res.status(401).json({ status: "error", message: info.message });
-        }
-        req.login(user, (loginErr) => {
-            if (loginErr) {
-                console.error(loginErr);
-                return res.status(500).json({
-                    status: "error",
-                    message: "An error occurred during login. Please try again later.",
-                });
-            }
-            return res.json({ status: "success" });
-        });
-    })(req, res, next);
-});
-
-
-router.post("/restaurant/login", (req, res, next) => {
-    passport.authenticate("restaurant", (err, user, info) => {
-        if (err) {
-            console.error(err);
-            return res.status(500).json({
-                status: "error",
-                message: "An internal server error occurred. Please try again later.",
-            });
-        }
-        if (!user) {
-            return res.status(401).json({ status: "error", message: info.message });
-        }
-        req.login(user, (loginErr) => {
-            if (loginErr) {
-                console.error(loginErr);
-                return res.status(500).json({
-                    status: "error",
-                    message: "An error occurred during login. Please try again later.",
-                });
-            }
-            return res.json({ status: "success" });
-        });
-    })(req, res, next);
-});
 
 export default router;

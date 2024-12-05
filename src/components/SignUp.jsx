@@ -1,11 +1,11 @@
 import React, { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import RestaurantSignUp from "./RestaurantSignUp";
 
 function SignUp() {
     const navigate = useNavigate();
     const [message, setMessage] = useState("");
-    const [isRestaurant, setIsRestaurant] = useState(false); // need to be able to toggle between User and Restaurant sign-up
+    const [isRestaurant, setIsRestaurant] = useState(false); // Toggle between User and Restaurant sign-up
 
     const handleSubmit = async (e) => {
         e.preventDefault();
@@ -74,7 +74,8 @@ function SignUp() {
             )}
             {message && <p className="error-message">{message}</p>}
             <p>
-                Already have an account? <a href="/login">Sign In</a>
+                Already have an account?{" "}
+                <Link to="/login">Sign In</Link>
             </p>
         </div>
     );

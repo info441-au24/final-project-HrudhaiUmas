@@ -10,7 +10,6 @@ import { dirname } from "path";
 import models from "./models.js";
 import apiRouter from "./routes/api.js";
 import authRouter from "./routes/auth.js";
-import restaurantRoutes from './routes/controllers/restaurants.js';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
@@ -41,7 +40,6 @@ app.use((req, res, next) => {
 // API routes should come before the static/catch-all routes
 app.use("/api", apiRouter);
 app.use("/login", authRouter);
-app.use("/restaurant", restaurantRoutes);
 
 app.use(passport.authenticate("session"));
 

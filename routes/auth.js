@@ -38,28 +38,6 @@ passport.use(
     })
 );
 
-// Restaurant Strategy
-passport.use(
-    "restaurant",
-    new LocalStrategy(async function verify(username, password, cb) {
-        try {
-            const restaurant = await models.Restaurant.findOne({ username: username });
-
-            if (!restaurant) {
-                return cb(null, false, { message: "Incorrect username or password." });
-            }
-
-            const hashedPassword = await hashPassword(password, restaurant.salt);
-            if (!crypto.timingSafeEqual(Buffer.from(restaurant.hashed_password), hashedPassword)) {
-                return cb(null, false, { message: "Incorrect username or password." });
-            }
-
-            return cb(null, restaurant);
-        } catch (err) {
-            return cb(err);
-        }
-    })
-);
 
 passport.serializeUser((user, cb) => {
     process.nextTick(() => {
@@ -70,16 +48,13 @@ passport.serializeUser((user, cb) => {
 passport.deserializeUser((user, cb) => {
     process.nextTick(async () => {
         try {
-            const fullUser =
-                (await models.User.findById(user.id)) ||
-                (await models.Restaurant.findById(user.id));
+            const fullUser = await models.User.findById(user.id);
             return cb(null, fullUser);
         } catch (err) {
             return cb(err);
         }
     });
 });
-
 
 router.get("/status", (req, res) => {
     if (req.isAuthenticated()) {
@@ -132,7 +107,13 @@ router.post("/login", (req, res, next) => {
                     message: "An error occurred during login. Please try again later.",
                 });
             }
-            return res.json({ status: "success" });
+            return res.json({ 
+                status: "success", 
+                user: {
+                    username: user.username,
+                    role: user.role
+                } 
+            });
         });
     })(req, res, next);
 });
