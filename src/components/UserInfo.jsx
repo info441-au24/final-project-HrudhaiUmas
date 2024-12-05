@@ -81,6 +81,7 @@ function UserInfo() {
                 </p>
                 <div className="dietary-selection-form">
                     <h3>Update Your Dietary Restrictions</h3>
+                    <h5>To select multiple or remove any dietary restrictions, use the ctrl key on Windows and command key on Mac.</h5>
                     <form onSubmit={handleDietarySelection}>
                         <select
                             multiple
