@@ -6,16 +6,19 @@ import { useState } from "react";
 function Login() {
     const navigate = useNavigate();
     const { checkAuth } = useAuth();
-    
+
     const [message, setMessage] = useState("");
-    // let message = "";
+    const [isRestaurant, setIsRestaurant] = useState(false);
 
     const handleSubmit = async (e) => {
         e.preventDefault();
         try {
             const username = e.target.username.value;
             const password = e.target.password.value;
-            const response = await fetch("/login", {
+
+            const loginEndpoint = isRestaurant ? "/restaurant/login" : "/login"; // pretty cool we can do dyamic endpoints :)
+
+            const response = await fetch(loginEndpoint, {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
@@ -33,7 +36,7 @@ function Login() {
                 setMessage("");
                 navigate("/");
             } else {
-                setMessage(data.message);
+                setMessage(data.message || "Invalid credentials. Please try again.");
             }
         } catch (err) {
             console.error(err);
@@ -43,22 +46,42 @@ function Login() {
 
     return (
         <div className="login-container">
-            <h1>Sign in</h1>
-                <form onSubmit={handleSubmit}>
-                    <section>
-                        <label htmlFor="username">Username</label>
-                        <input id="username" name="username" type="text" required />
-                    </section>
-                    <section>
-                        <label htmlFor="current-password">Password</label>
-                        <input id="current-password" name="password" type="password" required />
-                    </section>
+            <h1>{isRestaurant ? "Sign into Restaurant" : "Sign into User"}</h1>
 
-                    <button type="submit">Sign in</button>
-                </form>
+            {/* Toggle between User and Restaurant login */}
+            <div className="toggle-login">
+                <button
+                    className={`toggle-button ${!isRestaurant ? "active" : ""}`}
+                    onClick={() => setIsRestaurant(false)}
+                >
+                    User
+                </button>
+                <button
+                    className={`toggle-button ${isRestaurant ? "active" : ""}`}
+                    onClick={() => setIsRestaurant(true)}
+                >
+                    Restaurant
+                </button>
+            </div>
 
-                {message && <p className="error-message">{message}</p>}
-                <p>Don't have an account? <a href="/signup">Sign up</a></p>
+            <form onSubmit={handleSubmit}>
+                <section>
+                    <label htmlFor="username">
+                        {isRestaurant ? "Restaurant Username" : "Username"}
+                    </label>
+                    <input id="username" name="username" type="text" required />
+                </section>
+                <section>
+                    <label htmlFor="current-password">Password</label>
+                    <input id="current-password" name="password" type="password" required />
+                </section>
+                <button type="submit">
+                    {isRestaurant ? "Sign into Restaurant" : "Sign into User"}
+                </button>
+            </form>
+
+            {message && <p className="error-message">{message}</p>}
+            <p>Don't have an account? <a href="/signup">Sign up</a></p>
         </div>
     );
 }

@@ -15,24 +15,51 @@ async function hashPassword(password, salt) {
     });
 }
 
-passport.use(new LocalStrategy(async function verify(username, password, cb) {
-    try {
-        const user = await models.User.findOne({ username: username });
+// User Strategy
+passport.use(
+    "user",
+    new LocalStrategy(async function verify(username, password, cb) {
+        try {
+            const user = await models.User.findOne({ username: username });
 
-        if (!user) {
-            return cb(null, false, { message: "Incorrect username or password." });
+            if (!user) {
+                return cb(null, false, { message: "Incorrect username or password." });
+            }
+
+            const hashedPassword = await hashPassword(password, user.salt);
+            if (!crypto.timingSafeEqual(Buffer.from(user.hashed_password), hashedPassword)) {
+                return cb(null, false, { message: "Incorrect username or password." });
+            }
+
+            return cb(null, user);
+        } catch (err) {
+            return cb(err);
         }
+    })
+);
 
-        const hashedPassword = await hashPassword(password, user.salt);
-        if (!crypto.timingSafeEqual(Buffer.from(user.hashed_password), hashedPassword)) {
-            return cb(null, false, { message: "Incorrect username or password." });
+// Restaurant Strategy
+passport.use(
+    "restaurant",
+    new LocalStrategy(async function verify(username, password, cb) {
+        try {
+            const restaurant = await models.Restaurant.findOne({ username: username });
+
+            if (!restaurant) {
+                return cb(null, false, { message: "Incorrect username or password." });
+            }
+
+            const hashedPassword = await hashPassword(password, restaurant.salt);
+            if (!crypto.timingSafeEqual(Buffer.from(restaurant.hashed_password), hashedPassword)) {
+                return cb(null, false, { message: "Incorrect username or password." });
+            }
+
+            return cb(null, restaurant);
+        } catch (err) {
+            return cb(err);
         }
-
-        return cb(null, user);
-    } catch (err) {
-        return cb(err);
-    }
-}));
+    })
+);
 
 passport.serializeUser((user, cb) => {
     process.nextTick(() => {
@@ -43,13 +70,16 @@ passport.serializeUser((user, cb) => {
 passport.deserializeUser((user, cb) => {
     process.nextTick(async () => {
         try {
-            const fullUser = await models.User.findById(user.id);
+            const fullUser =
+                (await models.User.findById(user.id)) ||
+                (await models.Restaurant.findById(user.id));
             return cb(null, fullUser);
         } catch (err) {
             return cb(err);
         }
     });
 });
+
 
 router.get("/status", (req, res) => {
     if (req.isAuthenticated()) {
@@ -70,42 +100,42 @@ router.get("/status", (req, res) => {
     }
 });
 
-router.post("/", passport.authenticate("local"), (req, res) => {
+router.post("/", passport.authenticate("user"), (req, res) => {
     res.json({
         status: "success",
         user: {
             username: req.user.username,
             preferences: req.user.preferences,
-            dietaryRestrictions: req.user.dietaryRestrictions
-        }
+            dietaryRestrictions: req.user.dietaryRestrictions,
+        },
     });
 });
 
-router.post("/login",(req, res, next) => {
-        passport.authenticate("local", (err, user, info) => {
-            if (err) {
-                console.error(err);
+
+router.post("/login", (req, res, next) => {
+    passport.authenticate("user", (err, user, info) => {
+        if (err) {
+            console.error(err);
+            return res.status(500).json({
+                status: "error",
+                message: "An internal server error occurred. Please try again later.",
+            });
+        }
+        if (!user) {
+            return res.status(401).json({ status: "error", message: info.message });
+        }
+        req.login(user, (loginErr) => {
+            if (loginErr) {
+                console.error(loginErr);
                 return res.status(500).json({
                     status: "error",
-                    message: "An internal server error occurred. Please try again later.",
+                    message: "An error occurred during login. Please try again later.",
                 });
             }
-            if (!user) {
-                return res.status(401).json({ status: "error", message: info.message });
-            }
-            req.login(user, (loginErr) => {
-                if (loginErr) {
-                    console.error(loginErr);
-                    return res.status(500).json({
-                        status: "error",
-                        message: "An error occurred during login. Please try again later.",
-                    });
-                }
-                return res.json({ status: "success" });
-            });
-        })(req, res, next);
-    }
-);
+            return res.json({ status: "success" });
+        });
+    })(req, res, next);
+});
 
 router.post("/signup", async (req, res) => {
     try {
