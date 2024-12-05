@@ -3,6 +3,7 @@ import { useAuth } from "./AuthContext";
 
 function UserInfo() {
     const [dietaryRestrictions, setDietaryRestrictions] = useState([]);
+    const [statusMessage, setStatusMessage] = useState(""); // New state for status messages
     const { user } = useAuth();
 
     // Fetch dietary restrictions on load
@@ -15,7 +16,6 @@ function UserInfo() {
 
             if (response.ok) {
                 const data = await response.json();
-                console.log("Fetched dietary restrictions:", data.dietaryRestrictions);
                 setDietaryRestrictions(data.dietaryRestrictions || []);
             } else {
                 console.error("Failed to fetch dietary restrictions.");
@@ -47,20 +47,23 @@ function UserInfo() {
             });
 
             if (response.ok) {
-                alert("Dietary restrictions updated successfully!");
+                setStatusMessage("Dietary restrictions updated successfully!");
                 fetchDietaryRestrictions(); // Refresh dietary restrictions
             } else {
-                console.error("Failed to update dietary restrictions.");
+                setStatusMessage("Failed to update dietary restrictions.");
             }
         } catch (err) {
             console.error("Error updating dietary restrictions:", err);
+            setStatusMessage("Error updating dietary restrictions.");
         }
+
+        // Clear the status message after 5 seconds
+        setTimeout(() => setStatusMessage(""), 5000);
     };
 
     // Handle change in dietary restrictions selection
     const handleChange = (event) => {
         const selectedRestrictions = Array.from(event.target.selectedOptions, (option) => option.value);
-        console.log("Selected restrictions:", selectedRestrictions);
         setDietaryRestrictions(selectedRestrictions);
     };
 
@@ -68,7 +71,6 @@ function UserInfo() {
         <div className="user-info-page">
             <div className="user-profile-section">
                 <h1>Welcome, {user?.username}!</h1>
-                {/* <p className="user-email">Email: {user?.email || "Not provided"}</p> */}
             </div>
             <div className="user-dietary-section">
                 <h2>Your Dietary Restrictions</h2>
@@ -97,6 +99,9 @@ function UserInfo() {
                             Save Changes
                         </button>
                     </form>
+                    {statusMessage && (
+                        <p className="status-message">{statusMessage}</p> // Display status message
+                    )}
                 </div>
             </div>
             <div className="user-additional-section">
