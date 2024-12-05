@@ -1,6 +1,6 @@
 import React, { useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { useAuth } from './AuthContext';
+import { useAuth } from "./AuthContext";
 
 function Header() {
     const { user, checkAuth } = useAuth();
@@ -29,8 +29,8 @@ function Header() {
         <header>
             <div className="container">
                 <h1 className="logo">
-                <img src="/images/logo.png" alt="BiteMap Logo" className="logo-icon" />
-                BiteMap
+                    <img src="/images/logo.png" alt="BiteMap Logo" className="logo-icon" />
+                    BiteMap
                 </h1>
                 <nav>
                 <ul className="nav-links">

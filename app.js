@@ -43,19 +43,10 @@ app.use("/login", authRouter);
 
 app.use(passport.authenticate("session"));
 
-if (process.env.NODE_ENV === 'production') {
-    app.use(express.static(path.join(__dirname, "dist")));
+app.use(express.static(path.join(__dirname, "dist")));
 
-    app.get("*", (req, res) => {
-        res.sendFile(path.join(__dirname, "dist", "index.html"));
-    });
-} else {
-    // In development, proxy non-API requests to Vite dev server
-    app.get("*", (req, res) => {
-        if (!req.path.startsWith('/api') && !req.path.startsWith('/login')) {
-            res.redirect('http://localhost:5173' + req.path);
-        }
-    });
-}
+app.get("*", (req, res) => {
+    res.sendFile(path.join(__dirname, "dist", "index.html"));
+});
 
 export default app;
