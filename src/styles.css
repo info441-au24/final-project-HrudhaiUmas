@@ -539,9 +539,18 @@ header .nav-links button:hover {
 }
 
 .search-results-item p:nth-of-type(2) {
-    height: 75%;
+    height: 35%;
     width: 100%;
     padding-left: 10px;
+}
+
+.search-results-item p:nth-of-type(3) {
+    height: 40%;
+    width: 100%;
+    padding-left: 10px;
+    display: flex;
+    justify-content: center;
+    font-size: 26px;
 }
 
 /* About Us Section */

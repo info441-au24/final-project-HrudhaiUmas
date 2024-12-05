@@ -104,6 +104,7 @@ function SearchResults() {
             searchResults.map((dish, index) => (
                 <div key={index} className="search-results-item">
                     <p>Restaurant Name: Pizza on the Ave</p>
+                    <p>Location: 4801 24th Ave NE, Seattle WA 98105</p>
                     <p>{dish.name}</p>
                 </div>
             ))
