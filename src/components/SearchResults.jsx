@@ -45,9 +45,13 @@ function SearchResults() {
             }
 
             const data = await response.json();
-            const filteredData = data.filter((dish) =>
-                dish.tags?.some((tag) => dietaryRestrictions.includes(tag))
-            );
+
+            // Filter results only if dietary restrictions exist
+            const filteredData = dietaryRestrictions.length > 0
+                ? data.filter((dish) =>
+                      dish.tags?.some((tag) => dietaryRestrictions.includes(tag))
+                  )
+                : data; // If no dietary restrictions, include all dishes
 
             setSearchResults(filteredData);
         } catch (error) {
