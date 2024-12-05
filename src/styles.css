@@ -107,6 +107,43 @@ header .nav-links a:hover {
     border-radius: 100%;
 }
 
+/* User Info Styling */
+.select-dietary-restrictions, .user-dietary-restrictions {
+    display: flex;
+    flex-direction: column;
+    padding-left: 50px;
+}
+
+#dietary-restrictions-dropdown {
+    width: 60%;
+    margin-bottom: 50px;
+}
+
+#dietary-selection-form {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+}
+
+#dietary-restrictions-dropdown option {
+    height: 30px;
+    font-size: 14px;
+    padding-left: 10px;
+}
+
+#submit-dietary-selection {
+    width: 300px;
+    height: 30px;
+    font-size: 14px;
+    border-radius: 250px;
+    background-color: #ff6f61;
+    margin-bottom: 20px;
+}
+
+#submit-dietary-selection:hover {
+    background-color:#ff3f3f;
+}
+
 /* Sign Up Button Styles */
 .signup-btn {
     background: white;
