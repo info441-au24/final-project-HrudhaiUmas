@@ -38,12 +38,15 @@ function Header() {
                     <li><Link to="/services">Services</Link></li>
                     <li>
                         {user ? (
-                            <button
+                            <div className="logged-in-header-div">
+                                <button
                                 className="signup-btn"
                                 onClick={handleLogout}
-                            >
-                                Sign Out ({user.username})
-                            </button>
+                                >
+                                    Sign Out ({user.username})
+                                </button>
+                                <img src={'/images/UserProfileIcon.jpg'} alt="user profile icon" className="profile-icon" />
+                            </div>
                         ) : (
                             <Link to="/login">
                                 <button className="signup-btn">

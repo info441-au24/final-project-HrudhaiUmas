@@ -83,6 +83,25 @@ header .nav-links a:hover {
     text-decoration: underline;
 }
 
+.logged-in-header-div {
+    white-space: nowrap;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    background-color:#ff6f61;
+}
+
+.logged-in-header-div button, .logged-in-header-div img {
+    display: inline-block;
+}
+
+.profile-icon {
+    height: 50px;
+    width: 50px;
+    border-radius: 100%;
+    margin-left: 10px;
+}
+
 /* Sign Up Button Styles */
 .signup-btn {
     background: white;
