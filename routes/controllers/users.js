@@ -50,7 +50,6 @@ router.post("/register", async (req, res) => {
 });
 
 // Update dietary restrictions
-// Update dietary restrictions
 router.post("/dietary-restrictions", async (req, res) => {
     try {
         const { username, dietaryRestrictions } = req.body;

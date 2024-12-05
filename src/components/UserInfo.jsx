@@ -65,33 +65,43 @@ function UserInfo() {
     };
 
     return (
-        <div className="user-info-container">
-            <div className="user-dietary-restrictions">
-                <h1>Your dietary restrictions:</h1>
-                <p>{dietaryRestrictions.join(", ") || "None selected"}</p>
+        <div className="user-info-page">
+            <div className="user-profile-section">
+                <h1>Welcome, {user?.username}!</h1>
+                {/* <p className="user-email">Email: {user?.email || "Not provided"}</p> */}
             </div>
-            <div className="select-dietary-restrictions">
-                <h1>Select your dietary restrictions</h1>
-                <p>
-                    Hold down <b>CTRL</b> if you're on Windows or <b>Command</b> if you are on Mac to select multiple options.
+            <div className="user-dietary-section">
+                <h2>Your Dietary Restrictions</h2>
+                <p className="dietary-list">
+                    {dietaryRestrictions.length > 0
+                        ? dietaryRestrictions.join(", ")
+                        : "No dietary restrictions selected."}
                 </p>
-                <form id="dietary-selection-form" onSubmit={handleDietarySelection}>
-                    <select
-                        id="dietary-restrictions-dropdown"
-                        className="dietary-restrictions-dropdown"
-                        multiple
-                        onChange={handleChange}
-                        value={dietaryRestrictions}
-                    >
-                        <option value="Vegan">Vegan</option>
-                        <option value="Vegetarian">Vegetarian</option>
-                        <option value="Lactose Intolerant">Lactose Intolerant</option>
-                        <option value="Gluten Intolerant">Gluten Intolerant</option>
-                        <option value="Kosher">Kosher</option>
-                        <option value="Halal">Halal</option>
-                    </select>
-                    <button id="submit-dietary-selection">Submit</button>
-                </form>
+                <div className="dietary-selection-form">
+                    <h3>Update Your Dietary Restrictions</h3>
+                    <form onSubmit={handleDietarySelection}>
+                        <select
+                            multiple
+                            onChange={handleChange}
+                            value={dietaryRestrictions}
+                            className="dietary-dropdown"
+                        >
+                            <option value="Vegan">Vegan</option>
+                            <option value="Vegetarian">Vegetarian</option>
+                            <option value="Lactose Intolerant">Lactose Intolerant</option>
+                            <option value="Gluten Intolerant">Gluten Intolerant</option>
+                            <option value="Kosher">Kosher</option>
+                            <option value="Halal">Halal</option>
+                        </select>
+                        <button className="update-button" type="submit">
+                            Save Changes
+                        </button>
+                    </form>
+                </div>
+            </div>
+            <div className="user-additional-section">
+                <h2>Your Activity</h2>
+                <p>Reviews and other activities will be displayed here.</p>
             </div>
         </div>
     );

@@ -81,6 +81,32 @@ router.post("/", passport.authenticate("local"), (req, res) => {
     });
 });
 
+router.post("/login",(req, res, next) => {
+        passport.authenticate("local", (err, user, info) => {
+            if (err) {
+                console.error(err);
+                return res.status(500).json({
+                    status: "error",
+                    message: "An internal server error occurred. Please try again later.",
+                });
+            }
+            if (!user) {
+                return res.status(401).json({ status: "error", message: info.message });
+            }
+            req.login(user, (loginErr) => {
+                if (loginErr) {
+                    console.error(loginErr);
+                    return res.status(500).json({
+                        status: "error",
+                        message: "An error occurred during login. Please try again later.",
+                    });
+                }
+                return res.json({ status: "success" });
+            });
+        })(req, res, next);
+    }
+);
+
 router.post("/signup", async (req, res) => {
     try {
         const { username, password } = req.body;

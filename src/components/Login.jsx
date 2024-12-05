@@ -1,12 +1,14 @@
 import React from "react";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "./AuthContext";
+import { useState } from "react";
 
 function Login() {
     const navigate = useNavigate();
     const { checkAuth } = useAuth();
-
-    let message = "";
+    
+    const [message, setMessage] = useState("");
+    // let message = "";
 
     const handleSubmit = async (e) => {
         e.preventDefault();
@@ -28,34 +30,37 @@ function Login() {
             const data = await response.json();
             if (data.status === "success") {
                 await checkAuth();
-                message = "Success!"
+                setMessage("");
                 navigate("/");
             } else {
-                message = "Failure to sign in, please try again later"
+                setMessage(data.message);
             }
         } catch (err) {
-            console.log(err);
-            message = "Failure to sign in, please try again later"
+            console.error(err);
+            setMessage("An error occurred. Please try again later.");
         }
-    }
+    };
 
     return (
-        <div>
+        <div className="login-container">
             <h1>Sign in</h1>
-            <form onSubmit={handleSubmit}>
-                <section>
-                    <label htmlFor="username">Username</label>
-                    <input id="username" name="username" type="text" required></input>
-                </section>
-                <section>
-                    <label htmlFor="current-password">Password</label>
-                    <input id="current-password" name="password" type="password" required></input>
-                </section>
-                <button type="submit">Sign in</button>
-            </form>
-            <p>Don't have an account? <a href="/signup">Sign up</a></p>
+                <form onSubmit={handleSubmit}>
+                    <section>
+                        <label htmlFor="username">Username</label>
+                        <input id="username" name="username" type="text" required />
+                    </section>
+                    <section>
+                        <label htmlFor="current-password">Password</label>
+                        <input id="current-password" name="password" type="password" required />
+                    </section>
+
+                    <button type="submit">Sign in</button>
+                </form>
+
+                {message && <p className="error-message">{message}</p>}
+                <p>Don't have an account? <a href="/signup">Sign up</a></p>
         </div>
-    )
+    );
 }
 
 export default Login;
