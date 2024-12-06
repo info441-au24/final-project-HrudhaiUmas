@@ -1,11 +1,9 @@
 import React from "react";
 import { useNavigate, Link } from "react-router-dom";
-import { useAuth } from "./AuthContext";
 import { useState } from "react";
 
-function Login() {
+function Login({ refreshUser }) {
     const navigate = useNavigate();
-    const { checkAuth } = useAuth();
 
     const [message, setMessage] = useState("");
     const [isRestaurant, setIsRestaurant] = useState(false);
@@ -15,6 +13,7 @@ function Login() {
         try {
             const username = e.target.username.value;
             const password = e.target.password.value;
+            const role = isRestaurant ? "restaurant" : "user"
 
             const response = await fetch("/auth/login", {
                 method: "POST",
@@ -24,16 +23,16 @@ function Login() {
                 body: JSON.stringify({
                     username: username,
                     password: password,
-                    role: isRestaurant ? "restaurant" : "user"
+                    role: role
                 }),
                 credentials: "include",
             });
 
             const data = await response.json();
             if (data.status === "success") {
-                await checkAuth();
+                await refreshUser();
                 setMessage("");
-                isRestaurant ? navigate("/restaurant/dashboard") : navigate("/");
+                navigate("/");
             } else {
                 setMessage(data.message || "Invalid credentials. Please try again.");
             }

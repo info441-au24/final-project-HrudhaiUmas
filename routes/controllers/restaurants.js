@@ -1,8 +1,6 @@
 import express from "express";
-const router = express.Router();
-import models from "../../models.js";
-import crypto from "crypto";
 
+const router = express.Router();
 
 router.get("/dishes", (req, res) => {
     res.json({ status: "success" });
@@ -14,7 +12,7 @@ router.post("/dishes", async (req, res) => {
             name, tags, price, spiceLevel, ingredients, description
         } = req.body;
 
-        const newDish = new models.Dish({
+        const newDish = new req.models.Dish({
             name: name,
             tags: tags,
             price: price,

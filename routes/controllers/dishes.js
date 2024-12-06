@@ -1,5 +1,4 @@
 import express from "express";
-import models from "../../models.js";
 
 const router = express.Router();
 
@@ -16,7 +15,7 @@ router.get("/search", async (req, res) => {
 
         // Fetch dietary restrictions if username is provided
         if (username) {
-            const user = await models.User.findOne({ username });
+            const user = await req.models.User.findOne({ username });
             if (!user) {
                 return res.status(404).json({ status: "error", error: "User not found" });
             }
@@ -32,7 +31,7 @@ router.get("/search", async (req, res) => {
             query.tags = { $in: dietaryRestrictions }; // Match dishes with any of the dietary restriction tags
         }
 
-        const searchResults = await models.Dish.find(query);
+        const searchResults = await req.models.Dish.find(query);
 
         const searchResultsJSON = searchResults.map((dish) => ({
             name: dish.name,
@@ -57,7 +56,7 @@ router.get("/surprise", async (req, res) => {
 
         // Fetch dietary restrictions if username is provided
         if (username) {
-            const user = await models.User.findOne({ username });
+            const user = await req.models.User.findOne({ username });
             if (!user) {
                 return res.status(404).json({ status: "error", error: "User not found" });
             }
@@ -67,7 +66,7 @@ router.get("/surprise", async (req, res) => {
         // Query to fetch dishes based on dietary restrictions
         const query = dietaryRestrictions.length > 0 ? { tags: { $in: dietaryRestrictions } } : {};
 
-        const dishes = await models.Dish.find(query); // Get all dishes that match the query
+        const dishes = await req.models.Dish.find(query); // Get all dishes that match the query
         if (!dishes.length) {
             return res.status(404).json({ suggestion: "No dishes available" });
         }

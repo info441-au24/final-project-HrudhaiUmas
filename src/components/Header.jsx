@@ -1,10 +1,7 @@
-import React, { useEffect } from "react";
+import React from "react";
 import { useNavigate } from "react-router-dom";
-import { useAuth } from "./AuthContext";
 
-function Header() {
-    const { user, checkAuth } = useAuth();
-    console.log(user);
+function Header({ user, refreshUser }) {
     const navigate = useNavigate();
 
     const handleLogout = async () => {
@@ -19,7 +16,7 @@ function Header() {
             const data = await response.json();
 
             if (data.status === "success") {
-                await checkAuth();
+                await refreshUser();
                 navigate("/");
             } else {
                 console.error("Logout failed:", data.message);
@@ -43,12 +40,8 @@ function Header() {
         }
     };
 
-    const onClickHandler = () => {
-        if (user.role === "user") {
-            navigate("/user-info");
-        } else if (user.role === "restaurant") {
-            navigate("/restaurant-info");
-        }
+    const handleProfileBtn = () => {
+        navigate("/profile");
     };
 
     return (
@@ -79,7 +72,7 @@ function Header() {
                                     >
                                         Sign Out ({user.username})
                                     </button>
-                                    <button id="user-info-btn" onClick={onClickHandler}>
+                                    <button id="user-info-btn" onClick={handleProfileBtn}>
                                         <img
                                             src={"/images/UserProfileIcon.jpg"}
                                             alt="user profile icon"

@@ -1,10 +1,8 @@
-import React, { useState, useEffect } from "react";
-import { useAuth } from "../AuthContext";
+import React, { useState } from "react";
 
-function UserInfo() {
+function UserInfo({ user }) {
     const [dietaryRestrictions, setDietaryRestrictions] = useState([]);
     const [statusMessage, setStatusMessage] = useState(""); // New state for status messages
-    const { user } = useAuth();
 
     // Fetch dietary restrictions on load
     const fetchDietaryRestrictions = async () => {
@@ -26,10 +24,6 @@ function UserInfo() {
             console.error("Error fetching dietary restrictions:", err);
         }
     };
-
-    useEffect(() => {
-        fetchDietaryRestrictions();
-    }, [user]);
 
     // Handle dietary restrictions update
     const handleDietarySelection = async (event) => {
@@ -71,50 +65,46 @@ function UserInfo() {
 
     return (
         <div className="user-info-page">
-            { user ? (
-                <>
-                    <div className="user-profile-section">
-                        <h1>Welcome, {user?.username}!</h1>
-                    </div>
-                    <div className="user-dietary-section">
-                        <h2>Your Dietary Restrictions</h2>
-                        <p className="dietary-list">
-                            {dietaryRestrictions.length > 0
-                                ? dietaryRestrictions.join(", ")
-                                : "No dietary restrictions selected."}
-                        </p>
-                        <div className="dietary-selection-form">
-                            <h3>Update Your Dietary Restrictions</h3>
-                            <h5>To select multiple or remove any dietary restrictions, use the ctrl key on Windows and command key on Mac.</h5>
-                            <form onSubmit={handleDietarySelection}>
-                                <select
-                                    multiple
-                                    onChange={handleChange}
-                                    value={dietaryRestrictions}
-                                    className="dietary-dropdown"
-                                >
-                                    <option value="Vegan">Vegan</option>
-                                    <option value="Vegetarian">Vegetarian</option>
-                                    <option value="Lactose Intolerant">Lactose Intolerant</option>
-                                    <option value="Gluten Intolerant">Gluten Intolerant</option>
-                                    <option value="Kosher">Kosher</option>
-                                    <option value="Halal">Halal</option>
-                                </select>
-                                <button className="update-button" type="submit">
-                                    Save Changes
-                                </button>
-                            </form>
-                            {statusMessage && (
-                                <p className="status-message">{statusMessage}</p> // Display status message
-                            )}
-                        </div>
-                    </div>
-                    <div className="user-additional-section">
-                        <h2>Your Activity</h2>
-                        <p>Reviews and other activities will be displayed here.</p>
-                    </div>
-                </>
-            ) : "Please Sign In" }
+            <div className="user-profile-section">
+                <h1>Welcome, {user?.username}!</h1>
+            </div>
+            <div className="user-dietary-section">
+                <h2>Your Dietary Restrictions</h2>
+                <p className="dietary-list">
+                    {dietaryRestrictions.length > 0
+                        ? dietaryRestrictions.join(", ")
+                        : "No dietary restrictions selected."}
+                </p>
+                <div className="dietary-selection-form">
+                    <h3>Update Your Dietary Restrictions</h3>
+                    <h5>To select multiple or remove any dietary restrictions, use the ctrl key on Windows and command key on Mac.</h5>
+                    <form onSubmit={handleDietarySelection}>
+                        <select
+                            multiple
+                            onChange={handleChange}
+                            value={dietaryRestrictions}
+                            className="dietary-dropdown"
+                        >
+                            <option value="Vegan">Vegan</option>
+                            <option value="Vegetarian">Vegetarian</option>
+                            <option value="Lactose Intolerant">Lactose Intolerant</option>
+                            <option value="Gluten Intolerant">Gluten Intolerant</option>
+                            <option value="Kosher">Kosher</option>
+                            <option value="Halal">Halal</option>
+                        </select>
+                        <button className="update-button" type="submit">
+                            Save Changes
+                        </button>
+                    </form>
+                    {statusMessage && (
+                        <p className="status-message">{statusMessage}</p> // Display status message
+                    )}
+                </div>
+            </div>
+            <div className="user-additional-section">
+                <h2>Your Activity</h2>
+                <p>Reviews and other activities will be displayed here.</p>
+            </div>
         </div>
     );
 }

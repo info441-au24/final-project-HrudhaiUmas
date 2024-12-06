@@ -40,6 +40,9 @@ function SearchResults() {
             const response = await fetch(
                 `/api/dishes/search?food=${encodeURIComponent(dishToSearch)}`
             );
+            const user = await fetch ("/auth/status");
+            const userData = await user.json();
+            console.log(userData);
             if (!response.ok) {
                 throw new Error(`HTTP error! status: ${response.status}`);
             }

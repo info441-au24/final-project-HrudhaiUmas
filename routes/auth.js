@@ -83,41 +83,18 @@ passport.deserializeUser((user, cb) => {
 
 router.get("/status", (req, res) => {
     if (req.isAuthenticated()) {
-        const userResponse = {
-            status: "success",
-            authenticated: true,
-            user: {
-                username: req.user.username,
-                role: req.user.role
-            }
-        };
-
-        if (req.user.role === "restaurant") {
-            userResponse.user = {
-                ...userResponse.user,
-                name: req.user.name,
-                email: req.user.email,
-                cuisine: req.user.cuisine
-            };
-        } else {
-            userResponse.user = {
-                ...userResponse.user,
-                preferences: req.user.preferences,
-                dietaryRestrictions: req.user.dietaryRestrictions
-            };
-        }
-
-        res.json(userResponse);
+        const { hashed_password, salt, ...userData } = req.user.toObject();
+        res.json({ authenticated: true, ...userData });
     } else {
+        console.log("not logged in");
         res.json({
-            status: "success",
             authenticated: false
         });
     }
 });
 
 router.post("/login", (req, res, next) => {
-    const loginType = req.body.role || "user";
+    const loginType = req.body.role;
     passport.authenticate(loginType, (err, user, info) => {
         if (err) {
             console.error(err);
