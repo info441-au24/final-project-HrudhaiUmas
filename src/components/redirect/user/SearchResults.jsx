@@ -38,7 +38,7 @@ function SearchResults({ user }) {
 
         try {
             const response = await fetch(
-                `/api/dishes/search?food=${encodeURIComponent(dishToSearch)}`
+                `/api/dishes/search?food=${encodeURIComponent(dishToSearch)}&username=${encodeURIComponent(user.username)}`
             );
             if (!response.ok) {
                 throw new Error(`HTTP error! status: ${response.status}`);
@@ -99,9 +99,15 @@ function SearchResults({ user }) {
         searchResults.length > 0 ? (
             searchResults.map((dish, index) => (
                 <div key={index} className="search-results-item">
-                    <p>Restaurant Name: Pizza on the Ave</p>
-                    <p>Location: 4801 24th Ave NE, Seattle WA 98105</p>
-                    <p>{dish.name}</p>
+                    <div className="search-results-subitem">
+                        <p>{dish.name}</p>
+                    </div>
+                    <div className="search-results-subitem">
+                        <p>Restaurant: {dish.restaurant}</p>
+                    </div>
+                    <div className="search-results-subitem">
+                        <p>Location: {dish.location}</p>
+                    </div>
                 </div>
             ))
         ) : (

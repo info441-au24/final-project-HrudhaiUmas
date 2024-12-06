@@ -13,6 +13,7 @@ router.get("/search", async (req, res) => {
     try {
         let dietaryRestrictions = [];
 
+        console.log("User: ", username);
         // Fetch dietary restrictions if username is provided
         if (username) {
             const user = await req.models.User.findOne({ username });
