@@ -1,6 +1,15 @@
 import React, { useState, useEffect } from "react";
 import { useParams } from 'react-router-dom';
 
+const TAG_OPTIONS = [
+    "Vegan",
+    "Vegetarian",
+    "Lactose Intolerant",
+    "Gluten Intolerant",
+    "Kosher",
+    "Halal"
+];
+
 function DishDetails({ user }) {
     const urlParams = useParams();
     const dishID = urlParams.dish;
@@ -9,6 +18,8 @@ function DishDetails({ user }) {
     const [tags, setTags] = useState();
     const [error, setError] = useState(null);
     const [isLoading, setIsLoading] = useState(false);
+    const [selectedTags, setSelectedTags] = useState([]);
+    const [statusMessage, setStatusMessage] = useState("");
 
     useEffect(() => {
         const initializeFetch = async () => {
@@ -56,16 +67,6 @@ function DishDetails({ user }) {
         return <div>Loading...</div>
     }
 
-    // const tags = dishDetails[0].tags.length > 0 ? (
-    //     dishDetails[0].tags.map((index, tag) => {
-    //         <div key={index} className="tag">
-    //             {tag}
-    //         </div>
-    //     })
-    // ) : (
-    //     <p>No tags for this dish yet.</p>
-    // )
-
     const getTags = tags ? (
         <div>
             <h4>Tags:</h4> {tags};
@@ -73,6 +74,45 @@ function DishDetails({ user }) {
     ) : (
         <p><h4>Tags:</h4> No tags for this dish yet</p>
     )
+
+    const handleChange = (event) => {
+        const newSelected = Array.from(event.target.selectedOptions, (option) => option.value);
+        console.log("newSelected: ", newSelected);
+        setSelectedTags(newSelected);
+    };
+
+    const handleTagSelection = async (event) => {
+        event.preventDefault();
+
+        try {
+            const response = await fetch("/api/dishes/tag", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify({
+                    _id: dishID,
+                    tags: selectedTags,
+                }),
+                credentials: "include",
+            });
+
+            if (response.ok) {
+                setTags(selectedTags.join(", "));
+                setStatusMessage("Tags updated successfully!");
+            } else {
+                setSelectedTags(tags);
+                setStatusMessage("Failed to update tags.");
+            }
+        } catch (err) {
+            console.error("Error updating tags:", err);
+            setStatusMessage("Error updating tags.");
+            setSelectedTags(tags);
+        }
+
+        // Clear the status message after 5 seconds
+        setTimeout(() => setStatusMessage(""), 5000);
+    };
 
     return (
         <>
@@ -89,6 +129,25 @@ function DishDetails({ user }) {
 
                         <div className="add-tags">
                             <h4>Add tags for this dish:</h4>
+                            <h5>To select multiple tags, use the ctrl key on Windows and command key on Mac.</h5>
+                            <form onSubmit={handleTagSelection}>
+                                <select
+                                    multiple
+                                    onChange={handleChange}
+                                    value={selectedTags}
+                                    className="dietary-dropdown"
+                                >
+                                    {TAG_OPTIONS.map(option => (
+                                        <option key={option} value={option}>{option}</option>
+                                    ))}
+                                </select>
+                                <button className="update-button" type="submit">
+                                    Save Changes
+                                </button>
+                            </form>
+                            {statusMessage && (
+                                <p className="status-message">{statusMessage}</p> // Display status message
+                            )}
                         </div>
                     </div>
                 ) : (

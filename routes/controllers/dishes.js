@@ -84,9 +84,37 @@ router.get("/surprise", async (req, res) => {
 });
 
 // Placeholder for /tag endpoint
-router.post("/tag", (req, res) => {
-    // TODO: Implement this endpoint in the future if needed
-    res.status(501).json({ status: "error", message: "Not implemented" });
+router.post("/tag", async (req, res) => {
+    try {
+        const { _id, tags } = req.body;
+
+        if(!_id || !tags) {
+            return res.status(400).json({
+                status: "error",
+                error: "Username or tags not provided"
+            })
+        }
+
+        const dish = await req.models.Dish.findOneAndUpdate(
+            { _id }, 
+            { $set: { tags }},
+            { new: true }
+        )
+
+        if (!dish) {
+            return res.status(404).json({ status: "error", error: "Dish not found" });
+        }
+
+        console.log("Tags updated for dish:", dish);
+
+        res.json({
+            status: "success",
+            tags: dish.tags
+        })
+    } catch (error) {
+        console.error("Error updating tags: ", error.message);
+        res.status(500).json({ status: "error", error: error.message});
+    }
 });
 
 router.get("/details", async (req, res) => {
