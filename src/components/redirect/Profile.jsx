@@ -3,7 +3,7 @@ import React from "react";
 import UserInfo from "./user/UserInfo";
 import RestaurantInfo from "./restaurant/RestaurantInfo";
 
-function Profile({ user }) {
+function Profile({ user, refreshUser }) {
     if (!user) {
         return (
             <div>
@@ -14,7 +14,9 @@ function Profile({ user }) {
 
     return (
         <div>
-            {(user?.role  === "restaurant") ? <RestaurantInfo user={user} /> : <UserInfo user={user} />}
+            {(user?.role  === "restaurant") ?
+                <RestaurantInfo user={user} refreshUser={refreshUser} /> :
+                <UserInfo user={user} refreshUser={refreshUser} />}
         </div>
     )
 }

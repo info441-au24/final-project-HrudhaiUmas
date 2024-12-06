@@ -1,25 +1,35 @@
 import React, { useState, useEffect } from "react";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
-import { checkAuthStatus } from "./components/utils/authStatus";
 
-import Home from "./components/Home";
-import Profile from "./components/Profile";
-import Login from "./components/Login";
-import SignUp from "./components/SignUp";
 import Header from "./components/Header";
 import About from "./components/About";
 import Services from "./components/Services";
 import Contact from "./components/Contact";
 import Footer from "./components/Footer";
 
+import Home from "./components/redirect/Home";
+import Profile from "./components/redirect/Profile";
+
+import Login from "./components/Login";
+import SignUp from "./components/SignUp";
+
+import SearchResults from "./components/redirect/user/SearchResults";
+
 function App() {
     const [user, setUser] = useState(null);
 
     const refreshUser = async () => {
-        const userData = await checkAuthStatus();
-        if (userData.authenticated) {
-            setUser(userData);
-        } else {
+        try {
+            const response = await fetch("/auth/status");
+            const userData = await response.json();
+
+            if (userData.authenticated) {
+                setUser(userData);
+            } else {
+                setUser(null);
+            }
+        } catch (err) {
+            console.log(err);
             setUser(null);
         }
     };
@@ -41,9 +51,10 @@ function App() {
                             <Contact />
                         </main>
                     } />
+                    <Route path="/search" element={<SearchResults user={user} /> } />
                     <Route path="/login" element={<Login refreshUser={refreshUser} />} />
                     <Route path="/signup" element={<SignUp refreshUser={refreshUser} />} />
-                    <Route path="/profile" element={<Profile user={user} /> } />
+                    <Route path="/profile" element={<Profile user={user} refreshUser={refreshUser} /> } />
                 </Routes>
                 <Footer />
             </div>

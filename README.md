@@ -4,14 +4,11 @@ final-project-HrudhaiUmas created by GitHub Classroom
 
 # retrieving or updating user info
 
-import { useAuth } from "./AuthContext"
+App.jsx now has a useEffect() for whenever the user changes, meaning that all the components get rerendered when this happens
 
--- in the component...
-const { user, setUser, checkAuth } = useAuth();
+this means that user data is in App.jsx and needs to be passed down through props
 
-- user has the user info
-- use setUser to update any information (like preferences)
-- checkAuth() to check if user is logged in
+pass down the refreshUser to update anything
 
 
 # tutorial

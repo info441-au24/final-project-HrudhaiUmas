@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import RestaurantSignUp from "./restaurant/RestaurantSignUp";
+import RestaurantSignUp from "./redirect/restaurant/RestaurantSignUp";
 
 function SignUp() {
     const navigate = useNavigate();

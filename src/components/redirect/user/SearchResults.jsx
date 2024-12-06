@@ -1,11 +1,9 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
-import { useAuth } from "../AuthContext";
 
-function SearchResults() {
+function SearchResults({ user }) {
     const navigate = useNavigate();
     const location = useLocation();
-    const { user } = useAuth();
 
     const [searchDish, setSearchDish] = useState("");
     const [searchResults, setSearchResults] = useState([]);
@@ -15,6 +13,8 @@ function SearchResults() {
     const dish = location.state?.dish;
 
     const fetchDietaryRestrictions = async () => {
+        if (!user) return;
+
         try {
             const response = await fetch(`/api/users/${user.username}/dietary-restrictions`, {
                 method: "GET",
@@ -40,9 +40,6 @@ function SearchResults() {
             const response = await fetch(
                 `/api/dishes/search?food=${encodeURIComponent(dishToSearch)}`
             );
-            const user = await fetch ("/auth/status");
-            const userData = await user.json();
-            console.log(userData);
             if (!response.ok) {
                 throw new Error(`HTTP error! status: ${response.status}`);
             }

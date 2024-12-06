@@ -1,5 +1,4 @@
-import React, { useState, useEffect } from "react";
-import { checkAuthStatus } from "./utils/authStatus";
+import React from "react";
 
 import SearchBox from "./user/SearchBox";
 import RestaurantDashboard from "./restaurant/RestaurantDashboard";

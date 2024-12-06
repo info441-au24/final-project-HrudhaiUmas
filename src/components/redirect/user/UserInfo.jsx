@@ -1,18 +1,28 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
+
+const DIETARY_OPTIONS = [
+    "Vegan",
+    "Vegetarian",
+    "Lactose Intolerant",
+    "Gluten Intolerant",
+    "Kosher",
+    "Halal"
+];
 
 function UserInfo({ user }) {
     const [dietaryRestrictions, setDietaryRestrictions] = useState([]);
     const [statusMessage, setStatusMessage] = useState(""); // New state for status messages
+
+    useEffect(() => {
+        fetchDietaryRestrictions();
+    }, []);
 
     // Fetch dietary restrictions on load
     const fetchDietaryRestrictions = async () => {
         if (!user) return;
 
         try {
-            const response = await fetch(`/api/users/${user.username}/dietary-restrictions`, {
-                method: "GET",
-                credentials: "include",
-            });
+            const response = await fetch(`/api/users/${user.username}/dietary-restrictions`);
 
             if (response.ok) {
                 const data = await response.json();
@@ -85,12 +95,9 @@ function UserInfo({ user }) {
                             value={dietaryRestrictions}
                             className="dietary-dropdown"
                         >
-                            <option value="Vegan">Vegan</option>
-                            <option value="Vegetarian">Vegetarian</option>
-                            <option value="Lactose Intolerant">Lactose Intolerant</option>
-                            <option value="Gluten Intolerant">Gluten Intolerant</option>
-                            <option value="Kosher">Kosher</option>
-                            <option value="Halal">Halal</option>
+                            {DIETARY_OPTIONS.map(option => (
+                                <option key={option} value={option}>{option}</option>
+                            ))}
                         </select>
                         <button className="update-button" type="submit">
                             Save Changes
