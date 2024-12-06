@@ -4,21 +4,25 @@ import { useAuth } from "./AuthContext";
 
 function Header() {
     const { user, checkAuth } = useAuth();
+    console.log(user);
     const navigate = useNavigate();
-
-    useEffect(() => {
-        checkAuth();
-    }, []);
 
     const handleLogout = async () => {
         try {
-            const response = await fetch("/login/logout", {
+            const response = await fetch("/auth/logout", {
                 method: "POST",
-                credentials: "include",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                credentials: "include"
             });
-            if (response.ok) {
-                checkAuth();
+            const data = await response.json();
+
+            if (data.status === "success") {
+                await checkAuth();
                 navigate("/");
+            } else {
+                console.error("Logout failed:", data.message);
             }
         } catch (err) {
             console.error("Logout failed:", err);
@@ -40,7 +44,11 @@ function Header() {
     };
 
     const onClickHandler = () => {
-        navigate("/user-info");
+        if (user.role === "user") {
+            navigate("/user-info");
+        } else if (user.role === "restaurant") {
+            navigate("/restaurant-info");
+        }
     };
 
     return (

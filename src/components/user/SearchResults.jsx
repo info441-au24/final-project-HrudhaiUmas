@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
-import { useAuth } from "./AuthContext";
+import { useAuth } from "../AuthContext";
 
 function SearchResults() {
     const navigate = useNavigate();
@@ -103,6 +103,8 @@ function SearchResults() {
         searchResults.length > 0 ? (
             searchResults.map((dish, index) => (
                 <div key={index} className="search-results-item">
+                    <p>Restaurant Name: Pizza on the Ave</p>
+                    <p>Location: 4801 24th Ave NE, Seattle WA 98105</p>
                     <p>{dish.name}</p>
                 </div>
             ))

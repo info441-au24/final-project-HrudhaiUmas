@@ -1,4 +1,4 @@
-import React, { createContext, useState, useContext } from "react";
+import React, { createContext, useState, useEffect, useContext } from "react";
 
 const AuthContext = createContext(null);
 
@@ -7,7 +7,7 @@ export function AuthProvider({ children }) {
 
     const checkAuth = async () => {
         try {
-            const response = await fetch("/login/status", {
+            const response = await fetch("/auth/status", {
                 credentials: "include"
             });
             const data = await response.json();
@@ -16,6 +16,10 @@ export function AuthProvider({ children }) {
             console.log(err);
         }
     };
+
+    useEffect(() => {
+        checkAuth();
+    }, []);
 
     return (
         <AuthContext.Provider value={{ user, setUser, checkAuth }}>

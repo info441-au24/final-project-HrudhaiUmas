@@ -1,12 +1,11 @@
-import React from "react";
-import { useNavigate, Link } from "react-router-dom";
-import { useState } from "react";
+import React, { useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
+import RestaurantSignUp from "./restaurant/RestaurantSignUp";
 
 function SignUp() {
     const navigate = useNavigate();
     const [message, setMessage] = useState("");
-
-    //let message = "";
+    const [isRestaurant, setIsRestaurant] = useState(false); // Toggle between User and Restaurant sign-up
 
     const handleSubmit = async (e) => {
         e.preventDefault();
@@ -14,14 +13,15 @@ function SignUp() {
             const username = e.target.username.value;
             const password = e.target.password.value;
 
-            const response = await fetch("login/signup", {
+            const response = await fetch("/auth/user/signup", {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json"
                 },
                 body: JSON.stringify({
                     username: username,
-                    password: password
+                    password: password,
+                    role: "user"
                 }),
                 credentials: "include"
             });
@@ -40,21 +40,44 @@ function SignUp() {
     };
 
     return (
-        <div className="login-container">
-            <h1>Sign Up</h1>
-            <form onSubmit={handleSubmit}>
-                <section>
-                    <label htmlFor="username">Username</label>
-                    <input id="username" name="username" type="text" required />
-                </section>
-                <section>
-                    <label htmlFor="password">Password</label>
-                    <input id="password" name="password" type="password" required />
-                </section>
-                <button type="submit">Sign Up</button>
-            </form>
+        <div className="signup-container">
+            <h1>{isRestaurant ? "Restaurant Sign-Up" : "User Sign-Up"}</h1>
+            <div className="toggle-signup">
+                <button
+                    className={`toggle-button ${!isRestaurant ? "active" : ""}`}
+                    onClick={() => setIsRestaurant(false)}
+                >
+                    User
+                </button>
+                <button
+                    className={`toggle-button ${isRestaurant ? "active" : ""}`}
+                    onClick={() => setIsRestaurant(true)}
+                >
+                    Restaurant
+                </button>
+            </div>
+            {isRestaurant ? (
+                // Render RestaurantSignUp Component
+                <RestaurantSignUp />
+            ) : (
+                // Render User Sign-Up Form
+                <form onSubmit={handleSubmit}>
+                    <section>
+                        <label htmlFor="username">Username</label>
+                        <input id="username" name="username" type="text" autoComplete="current-username" required />
+                    </section>
+                    <section>
+                        <label htmlFor="password">Password</label>
+                        <input id="password" name="password" type="password" autoComplete="current-password" required />
+                    </section>
+                    <button type="submit">Sign Up</button>
+                </form>
+            )}
             {message && <p className="error-message">{message}</p>}
-            <p>Already have an account? <Link to="/login">Sign In</Link></p>
+            <p>
+                Already have an account?{" "}
+                <Link to="/login">Sign In</Link>
+            </p>
         </div>
     );
 }

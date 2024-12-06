@@ -31,6 +31,7 @@ app.use(session({
 
 app.use(passport.initialize());
 app.use(passport.session());
+app.use(passport.authenticate("session"));
 
 app.use((req, res, next) => {
     req.models = models;
@@ -39,9 +40,7 @@ app.use((req, res, next) => {
 
 // API routes should come before the static/catch-all routes
 app.use("/api", apiRouter);
-app.use("/login", authRouter);
-
-app.use(passport.authenticate("session"));
+app.use("/auth", authRouter);
 
 app.use(express.static(path.join(__dirname, "dist")));
 

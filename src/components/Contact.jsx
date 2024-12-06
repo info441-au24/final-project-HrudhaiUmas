@@ -28,6 +28,7 @@ function Contact() {
                         type="text"
                         name="name"
                         placeholder="Your Name"
+                        autoComplete="name"
                         value={name}
                         onChange={(e) => setName(e.target.value)}
                         required
@@ -36,6 +37,7 @@ function Contact() {
                         type="email"
                         name="email"
                         placeholder="Your Email"
+                        autoComplete="email"
                         value={email}
                         onChange={(e) => setEmail(e.target.value)}
                         required
@@ -43,6 +45,7 @@ function Contact() {
                     <textarea
                         name="message"
                         placeholder="Your Message"
+                        autoComplete="message"
                         value={message}
                         onChange={(e) => setMessage(e.target.value)}
                         required
