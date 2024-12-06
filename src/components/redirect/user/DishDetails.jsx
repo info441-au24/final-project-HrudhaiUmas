@@ -64,18 +64,6 @@ function DishDetails({ user }) {
         return <div>Loading...</div>
     }
 
-    const getTagsString = (tagsArray) => {
-        return tagsArray.join(", ")
-    }
-
-    const getTags = tags ? (
-        <div>
-            <h4>Tags:</h4> {getTagsString(tags)};
-        </div>
-    ) : (
-        <p><h4>Tags:</h4> No tags for this dish yet</p>
-    )
-
     const handleChange = (event) => {
         const newSelected = Array.from(event.target.selectedOptions, (option) => option.value);
         console.log("newSelected: ", newSelected);
@@ -137,7 +125,14 @@ function DishDetails({ user }) {
                         <h4>Location: {dishDetails[0].location}</h4>
 
                         <div className="tags-container">
-                            {getTags}
+                            {
+                                tags.length > 0 
+                                ? (
+                                    tags.join(", ")
+                                ) : (
+                                    "This dish does not have any tags yet."
+                                )
+                            }
                         </div>
 
                         <div className="add-tags">
