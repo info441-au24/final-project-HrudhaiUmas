@@ -41,10 +41,7 @@ function DishDetails({ user }) {
             console.log("Getting the json response");
             const data = await response.json();
 
-            console.log("Json Data: ");
-            console.log(data);
-
-            const dataTags = data[0].tags.join(", ");
+            const dataTags = data[0].tags;
             console.log("dataTags: ", dataTags);
 
             setTags(dataTags);
@@ -67,9 +64,13 @@ function DishDetails({ user }) {
         return <div>Loading...</div>
     }
 
+    const getTagsString = (tagsArray) => {
+        return tagsArray.join(", ")
+    }
+
     const getTags = tags ? (
         <div>
-            <h4>Tags:</h4> {tags};
+            <h4>Tags:</h4> {getTagsString(tags)};
         </div>
     ) : (
         <p><h4>Tags:</h4> No tags for this dish yet</p>
@@ -84,6 +85,18 @@ function DishDetails({ user }) {
     const handleTagSelection = async (event) => {
         event.preventDefault();
 
+        let allTags = [];
+
+        for(let i = 0; i < tags.length; i++) {
+            allTags.push(tags[i]);
+        }
+
+        for(let i = 0; i < selectedTags.length; i++) {
+            allTags.push(selectedTags[i]);
+        }
+
+        console.log("All tags: ", allTags)
+
         try {
             const response = await fetch("/api/dishes/tag", {
                 method: "POST",
@@ -92,13 +105,13 @@ function DishDetails({ user }) {
                 },
                 body: JSON.stringify({
                     _id: dishID,
-                    tags: selectedTags,
+                    tags: allTags,
                 }),
                 credentials: "include",
             });
 
             if (response.ok) {
-                setTags(selectedTags.join(", "));
+                setTags(allTags);
                 setStatusMessage("Tags updated successfully!");
             } else {
                 setSelectedTags(tags);

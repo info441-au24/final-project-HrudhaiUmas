@@ -97,7 +97,11 @@ function SearchResults({ user }) {
 
     const content = searchResults.length > 0 ? (
         searchResults.map((dish, index) => {
-            return <DishCard dish={dish} index={index}/>
+            return (
+                <div className="search-results-item" key={index}>
+                    <DishCard dish={dish}/>
+                </div>
+            )
         })
     ) : (
         <p>No dishes found. Try searching for something else!</p>
@@ -133,9 +137,9 @@ function SearchResults({ user }) {
     );
 }
 
-function DishCard({ dish, index }) {
+function DishCard({ dish }) {
     return (
-        <div key={index} className="search-results-item">
+        <>
             <div className="search-results-subitem">
                 <p>{dish.restaurant}</p>
             </div>
@@ -148,7 +152,7 @@ function DishCard({ dish, index }) {
             <div className="search-results-subitem">
                 <Link to={`/dish-details/${dish.id}`}><button id="view-dish-details-button">View</button></Link>
             </div>
-        </div>
+        </>
     )
 }
 
