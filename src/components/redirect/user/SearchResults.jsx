@@ -46,6 +46,9 @@ function SearchResults({ user }) {
 
             const data = await response.json();
 
+            console.log("fetched data:");
+            console.log(data);
+
             // Filter results only if dietary restrictions exist
             const filteredData = dietaryRestrictions.length > 0
                 ? data.filter((dish) =>
@@ -100,13 +103,16 @@ function SearchResults({ user }) {
             searchResults.map((dish, index) => (
                 <div key={index} className="search-results-item">
                     <div className="search-results-subitem">
+                        <p>{dish.restaurant}</p>
+                    </div>
+                    <div className="search-results-subitem">
                         <p>{dish.name}</p>
                     </div>
                     <div className="search-results-subitem">
-                        <p>Restaurant: {dish.restaurant}</p>
+                        <p>Location: {dish.location}</p>
                     </div>
                     <div className="search-results-subitem">
-                        <p>Location: {dish.location}</p>
+                        <button id="view-dish-details-button">View</button>
                     </div>
                 </div>
             ))

@@ -13,7 +13,6 @@ router.get("/search", async (req, res) => {
     try {
         let dietaryRestrictions = [];
 
-        console.log("User: ", username);
         // Fetch dietary restrictions if username is provided
         if (username) {
             const user = await req.models.User.findOne({ username });
@@ -39,9 +38,14 @@ router.get("/search", async (req, res) => {
             tags: dish.tags,
             ingredients: dish.ingredients,
             spiceLevel: dish.spiceLevel,
+            restaurant: dish.restaurant,
+            location: dish.location,
         }));
 
-        res.json(searchResultsJSON);
+        console.log("search results:");
+        console.log(searchResultsJSON);
+
+        return res.json(searchResultsJSON);
     } catch (error) {
         console.error("Error fetching search results:", error.message);
         res.status(500).json({ status: "error", error: error.message });

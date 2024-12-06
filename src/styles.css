@@ -528,29 +528,54 @@ header .nav-links button:hover {
     flex-direction: column;
 }
 
-.search-results-item p:nth-of-type(1) {
+.search-results-subitem:nth-of-type(1) {
     height: 25%;
     background-color: #ff6f61;
     width: 100%;
     display: flex;
     justify-content: center;
     align-self: center;
-    font-size: 18px;
+    font-size: 20px;
+    font-weight: bold;
 }
 
-.search-results-item p:nth-of-type(2) {
-    height: 35%;
+.search-results-subitem:nth-of-type(2) {
+    height: 25%;
     width: 100%;
-    padding-left: 10px;
-}
-
-.search-results-item p:nth-of-type(3) {
-    height: 40%;
-    width: 100%;
-    padding-left: 10px;
     display: flex;
     justify-content: center;
-    font-size: 26px;
+    text-decoration: underline;
+}
+
+.search-results-subitem:nth-of-type(3) {
+    height: 25%;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+}
+
+.search-results-subitem:nth-of-type(4) {
+    height: 25%;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+#view-dish-details-button {
+    background: #ff6f61;
+    color: white;
+    border: none;
+    padding: 0.8rem 2rem;
+    border-radius: 25px;
+    font-size: 1rem;
+    cursor: pointer;
+    text-transform: uppercase;
+    font-weight: bold;
+}
+
+#view-dish-details-button:hover {
+    background: #ff9671;;
 }
 
 /* About Us Section */
