@@ -1,4 +1,5 @@
 import express from "express";
+import models from "../../models.js";
 
 const router = express.Router();
 
@@ -42,9 +43,6 @@ router.get("/search", async (req, res) => {
             restaurant: dish.restaurant,
             location: dish.location,
         }));
-
-        console.log("search results:");
-        console.log(searchResultsJSON);
 
         return res.json(searchResultsJSON);
     } catch (error) {
@@ -90,5 +88,32 @@ router.post("/tag", (req, res) => {
     // TODO: Implement this endpoint in the future if needed
     res.status(501).json({ status: "error", message: "Not implemented" });
 });
+
+router.get("/details", async (req, res) => {
+    const { id } = req.query;
+
+    console.log("id:", id);
+
+    if(!id) {
+        return res.status(400).json({
+            status: "error",
+            error: "Missing 'id' query parameter"
+        });
+    }
+
+    try {
+        const dish = await models.Dish.find({_id: id });
+
+        console.log(dish);
+
+        return res.json(dish);
+    } catch (error) {
+        console.error("Error fetching dish details: ", error.message);
+        res.status(500).json({
+            status: "error", 
+            error: error.message
+        });
+    }
+})
 
 export default router;

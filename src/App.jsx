@@ -56,7 +56,7 @@ function App() {
                     <Route path="/login" element={<Login refreshUser={refreshUser} />} />
                     <Route path="/signup" element={<SignUp refreshUser={refreshUser} />} />
                     <Route path="/profile" element={<Profile user={user} refreshUser={refreshUser} />} />
-                    <Route path="/dish-details/:dish" element={<DishDetails />} />
+                    <Route path="/dish-details/:dish" element={<DishDetails user={user} />} />
                 </Routes>
                 <Footer />
             </div>
