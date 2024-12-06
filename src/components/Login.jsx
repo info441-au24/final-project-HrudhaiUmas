@@ -1,5 +1,5 @@
 import React from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 import { useAuth } from "./AuthContext";
 import { useState } from "react";
 
@@ -58,7 +58,7 @@ function Login() {
                 </form>
 
                 {message && <p className="error-message">{message}</p>}
-                <p>Don't have an account? <a href="/signup">Sign up</a></p>
+                <p>Don't have an account? <Link to="/signup">Sign up</Link></p>
         </div>
     );
 }
