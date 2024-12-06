@@ -10,7 +10,8 @@ const DIETARY_OPTIONS = [
 ];
 
 function UserInfo({ user }) {
-    const [dietaryRestrictions, setDietaryRestrictions] = useState([]);
+    const [savedRestrictions, setSavedRestrictions] = useState([]);
+    const [selectedRestrictions, setSelectedRestrictions] = useState([]);
     const [statusMessage, setStatusMessage] = useState(""); // New state for status messages
 
     useEffect(() => {
@@ -26,7 +27,9 @@ function UserInfo({ user }) {
 
             if (response.ok) {
                 const data = await response.json();
-                setDietaryRestrictions(data.dietaryRestrictions || []);
+                const restrictions = data.dietaryRestrictions || [];
+                setSavedRestrictions(restrictions);
+                setSelectedRestrictions(restrictions);
             } else {
                 console.error("Failed to fetch dietary restrictions.");
             }
@@ -47,20 +50,22 @@ function UserInfo({ user }) {
                 },
                 body: JSON.stringify({
                     username: user.username,
-                    dietaryRestrictions,
+                    dietaryRestrictions: selectedRestrictions,
                 }),
                 credentials: "include",
             });
 
             if (response.ok) {
+                setSavedRestrictions(selectedRestrictions);
                 setStatusMessage("Dietary restrictions updated successfully!");
-                fetchDietaryRestrictions(); // Refresh dietary restrictions
             } else {
+                setSelectedRestrictions(savedRestrictions);
                 setStatusMessage("Failed to update dietary restrictions.");
             }
         } catch (err) {
             console.error("Error updating dietary restrictions:", err);
             setStatusMessage("Error updating dietary restrictions.");
+            setSelectedRestrictions(savedRestrictions);
         }
 
         // Clear the status message after 5 seconds
@@ -69,8 +74,8 @@ function UserInfo({ user }) {
 
     // Handle change in dietary restrictions selection
     const handleChange = (event) => {
-        const selectedRestrictions = Array.from(event.target.selectedOptions, (option) => option.value);
-        setDietaryRestrictions(selectedRestrictions);
+        const newSelected = Array.from(event.target.selectedOptions, (option) => option.value);
+        setSelectedRestrictions(newSelected);
     };
 
     return (
@@ -81,8 +86,8 @@ function UserInfo({ user }) {
             <div className="user-dietary-section">
                 <h2>Your Dietary Restrictions</h2>
                 <p className="dietary-list">
-                    {dietaryRestrictions.length > 0
-                        ? dietaryRestrictions.join(", ")
+                    {savedRestrictions.length > 0
+                        ? savedRestrictions.join(", ")
                         : "No dietary restrictions selected."}
                 </p>
                 <div className="dietary-selection-form">
@@ -92,7 +97,7 @@ function UserInfo({ user }) {
                         <select
                             multiple
                             onChange={handleChange}
-                            value={dietaryRestrictions}
+                            value={selectedRestrictions}
                             className="dietary-dropdown"
                         >
                             {DIETARY_OPTIONS.map(option => (

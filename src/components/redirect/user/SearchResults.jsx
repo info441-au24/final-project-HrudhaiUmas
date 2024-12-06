@@ -49,8 +49,10 @@ function SearchResults({ user }) {
             // Filter results only if dietary restrictions exist
             const filteredData = dietaryRestrictions.length > 0
                 ? data.filter((dish) =>
-                      dish.tags?.some((tag) => dietaryRestrictions.includes(tag))
-                  )
+                    dietaryRestrictions.every((restriction) =>
+                        dish.tags?.includes(restriction)
+                    )
+                )
                 : data; // If no dietary restrictions, include all dishes
 
             setSearchResults(filteredData);
@@ -63,22 +65,16 @@ function SearchResults({ user }) {
     };
 
     useEffect(() => {
-        // Fetch dietary restrictions on load
-        fetchDietaryRestrictions();
+        const initializeSearch = async () => {
+            await fetchDietaryRestrictions();
+            if (dish) {
+                setSearchDish(dish);
+                fetchSearchResults(dish);
+            }
+        };
 
-        // Fetch search results if a dish is provided
-        if (dish) {
-            setSearchDish(dish);
-            fetchSearchResults(dish);
-        }
+        initializeSearch();
     }, [dish, user]);
-
-    useEffect(() => {
-        // Refetch search results whenever dietary restrictions change
-        if (searchDish) {
-            fetchSearchResults(searchDish);
-        }
-    }, [dietaryRestrictions]);
 
     const handleSearch = (e) => {
         e.preventDefault();
