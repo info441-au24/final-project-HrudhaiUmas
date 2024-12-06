@@ -34,6 +34,7 @@ router.get("/search", async (req, res) => {
         const searchResults = await req.models.Dish.find(query);
 
         const searchResultsJSON = searchResults.map((dish) => ({
+            id: dish.id,
             name: dish.name,
             tags: dish.tags,
             ingredients: dish.ingredients,

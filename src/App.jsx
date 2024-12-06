@@ -14,6 +14,7 @@ import Login from "./components/Login";
 import SignUp from "./components/SignUp";
 
 import SearchResults from "./components/redirect/user/SearchResults";
+import DishDetails from "./components/redirect/user/DishDetails";
 
 function App() {
     const [user, setUser] = useState(null);
@@ -51,10 +52,11 @@ function App() {
                             <Contact />
                         </main>
                     } />
-                    <Route path="/search" element={<SearchResults user={user} /> } />
+                    <Route path="/search" element={<SearchResults user={user} />} />
                     <Route path="/login" element={<Login refreshUser={refreshUser} />} />
                     <Route path="/signup" element={<SignUp refreshUser={refreshUser} />} />
-                    <Route path="/profile" element={<Profile user={user} refreshUser={refreshUser} /> } />
+                    <Route path="/profile" element={<Profile user={user} refreshUser={refreshUser} />} />
+                    <Route path="/dish-details/:dish" element={<DishDetails />} />
                 </Routes>
                 <Footer />
             </div>

@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { useNavigate, useLocation } from "react-router-dom";
+import { useNavigate, useLocation, Link } from "react-router-dom";
 
 function SearchResults({ user }) {
     const navigate = useNavigate();
@@ -98,27 +98,43 @@ function SearchResults({ user }) {
         return <div>Please enter a dish to search!</div>;
     }
 
-    const contents =
-        searchResults.length > 0 ? (
-            searchResults.map((dish, index) => (
-                <div key={index} className="search-results-item">
-                    <div className="search-results-subitem">
-                        <p>{dish.restaurant}</p>
-                    </div>
-                    <div className="search-results-subitem">
-                        <p>{dish.name}</p>
-                    </div>
-                    <div className="search-results-subitem">
-                        <p>Location: {dish.location}</p>
-                    </div>
-                    <div className="search-results-subitem">
-                        <button id="view-dish-details-button">View</button>
-                    </div>
-                </div>
-            ))
-        ) : (
-            <p>No dishes found. Try searching for something else!</p>
-        );
+    // const onViewButtonClick = (dish) => {
+    //     navigate("/dish-details", {
+    //         state: {
+    //             dishID: dish.id
+    //         }
+    //     })
+    // }
+
+    // const contents =
+    //     searchResults.length > 0 ? (
+    //         searchResults.map((dish, index) => (
+    //             <div key={index} className="search-results-item">
+    //                 <div className="search-results-subitem">
+    //                     <p>{dish.restaurant}</p>
+    //                 </div>
+    //                 <div className="search-results-subitem">
+    //                     <p>{dish.name}</p>
+    //                 </div>
+    //                 <div className="search-results-subitem">
+    //                     <p>Location: {dish.location}</p>
+    //                 </div>
+    //                 <div className="search-results-subitem">
+    //                     <button id="view-dish-details-button" onClick={onViewButtonClick(dish)}>View</button>
+    //                 </div>
+    //             </div>
+    //         ))
+    //     ) : (
+    //         <p>No dishes found. Try searching for something else!</p>
+    //     );
+
+    const content = searchResults.length > 0 ? (
+        searchResults.map((dish, index) => {
+            return <DishCard dish={dish} index={index}/>
+        })
+    ) : (
+        <p>No dishes found. Try searching for something else!</p>
+    )
 
     return (
         <div>
@@ -145,9 +161,28 @@ function SearchResults({ user }) {
                     </button>
                 </div>
             </form>
-            <div className="search-results">{contents}</div>
+            <div className="search-results">{content}</div>
         </div>
     );
+}
+
+function DishCard({ dish, index }) {
+    return (
+        <div key={index} className="search-results-item">
+            <div className="search-results-subitem">
+                <p>{dish.restaurant}</p>
+            </div>
+            <div className="search-results-subitem">
+                <p>{dish.name}</p>
+            </div>
+            <div className="search-results-subitem">
+                <p>Location: {dish.location}</p>
+            </div>
+            <div className="search-results-subitem">
+                <Link to={`/dish-details/${dish.id}`}><button id="view-dish-details-button">View</button></Link>
+            </div>
+        </div>
+    )
 }
 
 export default SearchResults;
