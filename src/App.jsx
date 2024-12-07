@@ -16,6 +16,7 @@ import SignUp from "./components/SignUp";
 import SearchResults from "./components/redirect/user/SearchResults";
 import DishDetails from "./components/redirect/user/DishDetails";
 import RestaurantInfo from "./components/redirect/restaurant/RestaurantInfo";
+import RestaurantCard from "./components/redirect/restaurant/RestaurantCard";
 
 function App() {
     const [user, setUser] = useState(null);
@@ -59,6 +60,7 @@ function App() {
                     <Route path="/profile" element={<Profile user={user} refreshUser={refreshUser} />} />
                     <Route path="/dish-details/:dish" element={<DishDetails user={user} />} />
                     <Route path="/restaurant/:id" element={<RestaurantInfo user={user} />} />
+                    <Route path="/restaurant-card/:id" element={<RestaurantCard />} />
                 </Routes>
                 <Footer />
             </div>

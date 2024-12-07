@@ -37,7 +37,7 @@ function Home({ user }) {
     };
 
     const handleViewDetails = (restaurantId) => {
-        navigate(`/restaurant/${restaurantId}`);
+        navigate(`/restaurant-card/${restaurantId}`);
     };
 
     if (user?.role === "restaurant") {

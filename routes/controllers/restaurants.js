@@ -2,39 +2,6 @@ import express from "express";
 
 const router = express.Router();
 
-router.post("/dishes", async (req, res) => {
-    if (!req.isAuthenticated() || req.user.role !== "restaurant") {
-        return res.status(401).json({ status: "error", message: "Not authorized" });
-    }
-
-    const {
-        name,
-        tags,
-        price,
-        spiceLevel,
-        ingredients,
-        description
-    } = req.body;
-
-    try {
-        const newDish = new req.models.Dish({
-            name,
-            tags,
-            price,
-            spiceLevel,
-            ingredients,
-            description,
-            restaurant: req.user._id
-        });
-
-        await newDish.save();
-        res.json({ status: "success", dish: newDish });
-    } catch (err) {
-        console.error(err);
-        res.status(500).json({ status: "error", message: "Failed to add dish" });
-    }
-});
-
 router.get("/dishes", async (req, res) => {
     if (!req.isAuthenticated() || req.user.role !== "restaurant") {
         return res.status(401).json({ status: "error", message: "Not authorized" });
@@ -46,6 +13,37 @@ router.get("/dishes", async (req, res) => {
     } catch (err) {
         console.error(err);
         res.status(500).json({ status: "error", message: "Failed to fetch dishes" });
+    }
+});
+
+router.post("/dishes", async (req, res) => {
+    if (!req.isAuthenticated() || req.user.role !== "restaurant") {
+        return res.status(401).json({ status: "error", message: "Not authorized" });
+    }
+
+    const { name, tags, price, spiceLevel, ingredients, description } = req.body;
+
+    try {
+        const newDish = new req.models.Dish({
+            name,
+            tags,
+            price,
+            spiceLevel,
+            ingredients,
+            description,
+            restaurant: req.user._id,
+        });
+
+        await newDish.save();
+        
+        await req.models.Restaurant.findByIdAndUpdate(req.user._id, {
+            $push: { menu: newDish._id },
+        });
+
+        res.json({ status: "success", dish: newDish });
+    } catch (err) {
+        console.error(err);
+        res.status(500).json({ status: "error", message: "Failed to add dish" });
     }
 });
 
@@ -128,10 +126,12 @@ router.get("/all", async (req, res) => {
     }
 });
 
-
 router.get("/:id", async (req, res) => {
     try {
-        const restaurant = await req.models.Restaurant.findById(req.params.id, "-hashed_password -salt").populate("menu");
+        const restaurant = await req.models.Restaurant.findById(req.params.id, "-hashed_password -salt").populate({
+            path: "menu",
+            model: "Dish", 
+        });
         if (!restaurant) {
             return res.status(404).json({ status: "error", message: "Restaurant not found" });
         }
@@ -141,6 +141,7 @@ router.get("/:id", async (req, res) => {
         res.status(500).json({ status: "error", message: "Failed to fetch restaurant profile" });
     }
 });
+
 
 
 export default router;
