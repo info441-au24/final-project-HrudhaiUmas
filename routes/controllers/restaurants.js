@@ -16,6 +16,17 @@ router.get("/dishes", async (req, res) => {
     }
 });
 
+router.get("/:restaurant/menu", async (req, res) => {
+    try {
+        const { restaurant } = req.params;
+        const dishes = await req.models.Dish.find({ restaurant: restaurant });
+        res.json({ status: "success", dishes: dishes });
+    } catch (err) {
+        console.error(err);
+        res.status(500).json({ status: "error", message: "Failed to fetch dishes" });
+    }
+});
+
 router.post("/dishes", async (req, res) => {
     if (!req.isAuthenticated() || req.user.role !== "restaurant") {
         return res.status(401).json({ status: "error", message: "Not authorized" });

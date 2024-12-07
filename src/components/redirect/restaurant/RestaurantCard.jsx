@@ -4,11 +4,13 @@ import { useParams } from "react-router-dom";
 function RestaurantCard() {
     const { id } = useParams();
     const [restaurant, setRestaurant] = useState(null);
+    const [menu, setMenu] = useState();
     const [isLoading, setIsLoading] = useState(true);
     const [errorMessage, setErrorMessage] = useState("");
 
     useEffect(() => {
         fetchRestaurantData();
+        // fetchRestaurantMenu();
     }, [id]);
 
     const fetchRestaurantData = async () => {
@@ -18,10 +20,22 @@ function RestaurantCard() {
             const response = await fetch(`/api/restaurants/${id}`);
             const data = await response.json();
 
+            console.log("data:", data);
             if (response.ok) {
                 setRestaurant(data.restaurant);
             } else {
                 setErrorMessage(data.message || "Failed to fetch restaurant details.");
+            }
+
+            const menuResponse = await fetch(`/api/restaurants/${data.restaurant._id}/menu`);
+            const menuData = await menuResponse.json();
+
+            console.log("menu: ", menuData);
+
+            if (menuResponse.ok) {
+                setMenu(menuData.dishes || []);
+            } else {
+                setErrorMessage(menuData.message || "Failed to fetch restaurant details.");
             }
         } catch (error) {
             console.error("Error fetching restaurant details:", error);
@@ -30,6 +44,27 @@ function RestaurantCard() {
             setIsLoading(false);
         }
     };
+
+    // const fetchRestaurantMenu = async () => {
+    //     console.log(restaurant);
+    //     setIsLoading(true);
+    //     setErrorMessage("");
+    //     try {
+    //         const response = await fetch(`/api/restaurants/${restaurant._id}/menu/`);
+    //         const data = await response.json();
+
+    //         if (response.ok) {
+    //             setMenu(data.dishes || []);
+    //         } else {
+    //             setErrorMessage(data.message || "Failed to fetch restaurant details.");
+    //         }
+    //     } catch (error) {
+    //         console.error("Error fetching restaurant details:", error);
+    //         setErrorMessage("An error occurred. Please try again later.");
+    //     } finally {
+    //         setIsLoading(false);
+    //     }
+    // };
 
     if (isLoading) {
         return <div>Loading restaurant details...</div>;
@@ -53,9 +88,9 @@ function RestaurantCard() {
             </div>
 
             <h2>Menu</h2>
-            {restaurant.menu && restaurant.menu.length > 0 ? (
+            {menu && menu.length > 0 ? (
                 <ul className="menu-list">
-                    {restaurant.menu.map((dish) => (
+                    {menu.map((dish) => (
                         <li key={dish._id} className="menu-item">
                             <strong>{dish.name}</strong>: ${dish.price.toFixed(2)}
                             <p>{dish.description}</p>
