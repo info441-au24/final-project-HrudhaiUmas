@@ -27,7 +27,7 @@ function DishDetails({ user }) {
         };
 
         initializeFetch();
-    }, [dishID, user]);
+    }, [dishID]);
 
     const fetchDishDetails = async () => {
         try {
