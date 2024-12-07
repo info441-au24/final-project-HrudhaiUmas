@@ -11,6 +11,7 @@ As developers, we are passionate about food and believe in making dining an incl
 
 
 # Architectural Diagram
+![ArchitecturalDiagram](https://github.com/user-attachments/assets/11c4a5dc-02cd-4add-90f3-7df450d3c567)
 
 
 # Dataflow Diagram
@@ -34,28 +35,6 @@ As developers, we are passionate about food and believe in making dining an incl
 
 6. As a restaurant owner, I want to upload food items from my restaurant and be able to include dietary information so my customers can get a better idea of what we provide.
 
-
-# retrieving or updating user info
-App.jsx now has a useEffect() for whenever the user changes, meaning that all the components get rerendered when this happens
-
-this means that user data is in App.jsx and needs to be passed down through props
-
-pass down the refreshUser to update anything
-
-
-# tutorial
-1.
-npm install
-
-2.
-to run the app in development mode,
-
-npm run dev
-
-to run it in production (what will be deployed),
-
-npm run build
-node ./bin/www
 
 # Link to deployed website
 URL: https://kushpatel.me/
