@@ -70,7 +70,11 @@ function SearchResults({ user }) {
             setSearchResults(filteredData);
         } catch (error) {
             console.error("Error fetching search results:", error);
-            setError("Error fetching search results. Please try again later.");
+            if(user) {
+                setError("Error fetching search results. Please try again later.");
+            } else {
+                setError("Please sign in before searching so we can make a personal connection ;)")
+            }
         } finally {
             setIsLoading(false);
         }
