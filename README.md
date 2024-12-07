@@ -37,3 +37,6 @@ node ./bin/www
 5. As someone who is indecisive when it comes to food, I want BiteMap to give me recommendations about foods I should try based on a cuisine of my choosing so that I don’t have to decide for myself.
 
 6. As a restaurant owner, I want to upload food items from my restaurant and be able to include dietary information so my customers can get a better idea of what we provide.
+
+# Link to deployed website
+URL: https://kushpatel.me/
