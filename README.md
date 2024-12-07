@@ -33,8 +33,11 @@ As developers, we are passionate about food and believe in making dining an incl
 
 5. As someone who is indecisive when it comes to food, I want BiteMap to give me recommendations about foods I should try based on a cuisine of my choosing so that I don’t have to decide for myself.
 
+6. As a user, I want to see a list of restaurants near me so that I can see more details about those restaurants. 
 
-6. As a restaurant owner, I want to upload food items from my restaurant and be able to include dietary information so my customers can get a better idea of what we provide.
+7. As a restaurant owner, I want to upload food items from my restaurant and be able to include dietary information so my customers can get a better idea of what we provide.
+
+8. As a restaurant owner, I want to be able to edit my food items so I can keep my customers updated about my products.
 
 
 # Link to deployed website
