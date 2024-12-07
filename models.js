@@ -49,8 +49,7 @@ const dishSchema = new mongoose.Schema({
     spiceLevel: Number,
     ingredients: [String],
     description: String,
-    restaurant: String,
-    location: String
+    restaurant: { type: mongoose.Schema.Types.ObjectId, ref: "Restaurant" },
 });
 models.Dish = mongoose.model("Dish", dishSchema);
 

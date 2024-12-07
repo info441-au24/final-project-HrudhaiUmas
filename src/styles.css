@@ -1041,3 +1041,200 @@ footer {
     background: #ff9671;
     color: #fff;
 }
+
+
+/* Main container */
+.restaurant-profile-page {
+    max-width: 1200px;
+    margin: 50px auto;
+    padding: 0 20px;
+}
+
+/* Headings */
+.restaurant-profile-page h1 {
+    font-size: 2.5rem;
+    margin-bottom: 20px;
+    font-weight: 700;
+    color: #333;
+}
+
+.restaurant-profile-page h2 {
+    font-size: 1.8rem;
+    margin-bottom: 15px;
+    font-weight: 600;
+    color: #444;
+}
+
+/* Restaurant info section */
+.restaurant-info {
+    background: #fff;
+    padding: 20px;
+    margin-bottom: 30px;
+    border-radius: 8px;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+}
+
+.restaurant-info p {
+    margin-bottom: 10px;
+    font-size: 1rem;
+    color: #555;
+}
+
+.restaurant-info p strong {
+    color: #222;
+    font-weight: 600;
+}
+
+.restaurant-info a {
+    color: #0077cc;
+    text-decoration: none;
+}
+
+.restaurant-info a:hover {
+    text-decoration: underline;
+}
+
+/* Table of dishes */
+.dish-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 30px;
+    background: #fff;
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+}
+
+.dish-table th, .dish-table td {
+    padding: 15px;
+    text-align: left;
+    font-size: 0.95rem;
+    color: #555;
+}
+
+.dish-table thead {
+    background: #fafafa;
+    border-bottom: 2px solid #eaeaea;
+}
+
+.dish-table th {
+    font-weight: 600;
+    color: #333;
+}
+
+.dish-table tbody tr {
+    border-bottom: 1px solid #eaeaea;
+}
+
+.dish-table tbody tr:last-child {
+    border-bottom: none;
+}
+
+.dish-table td {
+    vertical-align: middle;
+}
+
+/* Messages */
+.error-message, .success-message {
+    padding: 15px;
+    margin-bottom: 20px;
+    border-radius: 5px;
+    font-weight: 500;
+}
+
+.error-message {
+    background: #ffe3e3;
+    color: #b00;
+    border: 1px solid #f5c2c2;
+}
+
+.success-message {
+    background: #e3ffe9;
+    color: #090;
+    border: 1px solid #c2f5ca;
+}
+
+/* Form for adding a new dish */
+.add-dish-form {
+    background: #fff;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    margin-bottom: 30px;
+}
+
+.add-dish-form label {
+    font-weight: 600;
+    color: #333;
+    font-size: 0.95rem;
+    margin-bottom: 5px;
+    display: inline-block;
+}
+
+.add-dish-form input[type="text"],
+.add-dish-form input[type="number"],
+.add-dish-form textarea,
+.add-dish-form select {
+    width: 100%;
+    font-size: 1rem;
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    background: #fafafa;
+}
+
+.add-dish-form input[type="text"]:focus,
+.add-dish-form input[type="number"]:focus,
+.add-dish-form textarea:focus,
+.add-dish-form select:focus {
+    outline: none;
+    border-color: #0077cc;
+    background: #fff;
+}
+
+.add-dish-form textarea {
+    resize: vertical;
+}
+
+.add-dish-form button {
+    align-self: flex-start;
+    background: #0077cc;
+    color: #fff;
+    font-size: 1rem;
+    font-weight: 600;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.add-dish-form button:hover {
+    background: #005da3;
+}
+
+/* Loading state */
+.restaurant-profile-page > div,
+.restaurant-profile-page > .error-message {
+    background: none;
+    box-shadow: none;
+    padding: 0;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .dish-table th, .dish-table td {
+        font-size: 0.85rem;
+        padding: 10px;
+    }
+
+    .restaurant-profile-page h1 {
+        font-size: 2rem;
+    }
+
+    .restaurant-profile-page h2 {
+        font-size: 1.5rem;
+    }
+}
