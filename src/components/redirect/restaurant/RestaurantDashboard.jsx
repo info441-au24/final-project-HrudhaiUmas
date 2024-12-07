@@ -11,20 +11,12 @@ const TAG_OPTIONS = [
 
 function RestaurantDashboard() {
     const [dishes, setDishes] = useState([]);
+    const [isLoading, setIsLoading] = useState(true);
     const [errorMessage, setErrorMessage] = useState("");
     const [successMessage, setSuccessMessage] = useState("");
-    const [isLoading, setIsLoading] = useState(true);
 
-    // Dish form state
-    const [dishForm, setDishForm] = useState({
-        name: "",
-        tags: [],
-        price: "",
-        spiceLevel: "",
-        ingredients: "",
-        description: "",
-        image: ""
-    });
+    const [isEditing, setIsEditing] = useState(null);
+    const [dishToEdit, setDishToEdit] = useState(null);
 
     useEffect(() => {
         fetchDishes();
@@ -33,78 +25,92 @@ function RestaurantDashboard() {
     const fetchDishes = async () => {
         setIsLoading(true);
         try {
-            const response = await fetch("/api/restaurants/dishes", {
-                credentials: "include"
-            });
-            const data = await response.json();
-            if (response.ok) {
-                setDishes(data.dishes || []);
+            // Check if the user is authenticated and a restaurant
+            const authResponse = await fetch("/auth/status", { credentials: "include" });
+            const authData = await authResponse.json();
+
+            if (!authData.authenticated || authData.role !== "restaurant") {
+                setErrorMessage("You must be logged in as a restaurant to view the dashboard.");
+                setIsLoading(false);
+                return;
+            }
+
+            // Fetch the restaurant's dishes
+            const dishesResponse = await fetch("/api/restaurants/dishes", { credentials: "include" });
+            const dishesData = await dishesResponse.json();
+
+            if (dishesResponse.ok) {
+                setDishes(dishesData.dishes || []);
             } else {
-                setErrorMessage(data.message || "Failed to fetch dishes.");
+                setErrorMessage(dishesData.message || "Failed to fetch dishes.");
             }
         } catch (error) {
-            console.error("Error fetching dishes:", error);
+            console.error("Error fetching dishes: ", error);
             setErrorMessage("An error occurred. Please try again later.");
         } finally {
             setIsLoading(false);
         }
     };
 
-    const handleFormChange = (e) => {
+    const startEditing = (dish) => {
+        setIsEditing(dish._id);
+        setDishToEdit({
+            _id: dish._id,
+            name: dish.name,
+            tags: dish.tags || [],
+            price: dish.price,
+            spiceLevel: dish.spiceLevel,
+            ingredients: dish.ingredients?.join(", ") || "",
+            description: dish.description || ""
+        });
+    };
+
+    const handleEditChange = (e) => {
         const { name, value, selectedOptions } = e.target;
         if (name === "tags") {
             const selectedTags = Array.from(selectedOptions, (option) => option.value);
-            setDishForm((prev) => ({ ...prev, tags: selectedTags }));
+            setDishToEdit((prev) => ({ ...prev, tags: selectedTags }));
         } else {
-            setDishForm((prev) => ({ ...prev, [name]: value }));
+            setDishToEdit((prev) => ({ ...prev, [name]: value }));
         }
     };
 
-    const handleAddDish = async (e) => {
-        e.preventDefault();
+    const handleSaveDish = async (dishId) => {
         setErrorMessage("");
         setSuccessMessage("");
 
-        if (!dishForm.name || !dishForm.price) {
+        if (!dishToEdit.name || !dishToEdit.price) {
             setErrorMessage("Name and price are required fields.");
             return;
         }
 
         try {
-            const response = await fetch("/api/restaurants/dishes", {
-                method: "POST",
+            const response = await fetch(`/api/restaurants/dishes/${dishId}`, {
+                method: "PUT",
                 headers: { "Content-Type": "application/json" },
                 credentials: "include",
                 body: JSON.stringify({
-                    name: dishForm.name,
-                    tags: dishForm.tags,
-                    price: Number(dishForm.price),
-                    spiceLevel: dishForm.spiceLevel ? Number(dishForm.spiceLevel) : null,
-                    ingredients: dishForm.ingredients ? dishForm.ingredients.split(",").map(i => i.trim()) : [],
-                    description: dishForm.description,
-                    image: dishForm.image
+                    name: dishToEdit.name,
+                    tags: dishToEdit.tags,
+                    price: Number(dishToEdit.price),
+                    spiceLevel: Number(dishToEdit.spiceLevel) || null,
+                    ingredients: dishToEdit.ingredients ? dishToEdit.ingredients.split(",").map(i => i.trim()) : [],
+                    description: dishToEdit.description
                 })
             });
 
             const data = await response.json();
             if (response.ok) {
-                setSuccessMessage("Dish added successfully!");
-                setDishForm({
-                    name: "",
-                    tags: [],
-                    price: "",
-                    spiceLevel: "",
-                    ingredients: "",
-                    description: "",
-                    image: ""
-                });
+                setSuccessMessage("Dish updated successfully!");
                 fetchDishes();
+                setIsEditing(null);
+                setDishToEdit(null);
             } else {
-                setErrorMessage(data.error || "Failed to add dish.");
+                setErrorMessage(data.error || "Failed to update dish.");
             }
         } catch (error) {
-            console.error("Error adding dish:", error);
-            setErrorMessage("An error occurred while adding the dish. Please try again.");
+            console.error("Error updating dish:", error);
+            setErrorMessage("An error occurred while updating the dish. Please try again.");
         }
 
         setTimeout(() => {
@@ -113,136 +119,143 @@ function RestaurantDashboard() {
         }, 5000);
     };
 
+    const handleCancelEdit = () => {
+        setIsEditing(null);
+        setDishToEdit(null);
+    };
+
+    if (isLoading) {
+        return <div>Loading your restaurant dashboard...</div>;
+    }
+
+    if (errorMessage) {
+        return <div className="error-message">{errorMessage}</div>;
+    }
+
     return (
-        <div className="restaurant-dashboard">
-            <h1>Your Restaurant Dashboard</h1>
-            <p>Manage your menu items. Add new dishes or view existing ones below.</p>
+        <div className="restaurant-dashboard-page">
+            <h1>Restaurant Dashboard</h1>
+            <h2>Your Menu Items</h2>
+            {dishes.length > 0 ? (
+                <table className="dish-table">
+                    <thead>
+                        <tr>
+                            <th>Name</th>
+                            <th>Tags</th>
+                            <th>Price</th>
+                            <th>Spice Level</th>
+                            <th>Ingredients</th>
+                            <th>Description</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {dishes.map((dish) => {
+                            const editingThisDish = isEditing === dish._id;
+                            return (
+                                <tr key={dish._id}>
+                                    <td>
+                                        {editingThisDish ? (
+                                            <input
+                                                type="text"
+                                                name="name"
+                                                value={dishToEdit?.name || ""}
+                                                onChange={handleEditChange}
+                                                required
+                                            />
+                                        ) : (
+                                            dish.name
+                                        )}
+                                    </td>
+                                    <td>
+                                        {editingThisDish ? (
+                                            <select
+                                                name="tags"
+                                                multiple
+                                                value={dishToEdit?.tags || []}
+                                                onChange={handleEditChange}
+                                            >
+                                                {TAG_OPTIONS.map(tag => (
+                                                    <option key={tag} value={tag}>{tag}</option>
+                                                ))}
+                                            </select>
+                                        ) : (
+                                            dish.tags?.join(", ")
+                                        )}
+                                    </td>
+                                    <td>
+                                        {editingThisDish ? (
+                                            <input
+                                                type="number"
+                                                step="0.01"
+                                                name="price"
+                                                value={dishToEdit?.price || ""}
+                                                onChange={handleEditChange}
+                                                required
+                                            />
+                                        ) : (
+                                            `$${dish.price}`
+                                        )}
+                                    </td>
+                                    <td>
+                                        {editingThisDish ? (
+                                            <input
+                                                type="number"
+                                                name="spiceLevel"
+                                                min="0"
+                                                max="5"
+                                                value={dishToEdit?.spiceLevel || ""}
+                                                onChange={handleEditChange}
+                                            />
+                                        ) : (
+                                            dish.spiceLevel || "-"
+                                        )}
+                                    </td>
+                                    <td>
+                                        {editingThisDish ? (
+                                            <input
+                                                type="text"
+                                                name="ingredients"
+                                                value={dishToEdit?.ingredients || ""}
+                                                onChange={handleEditChange}
+                                            />
+                                        ) : (
+                                            dish.ingredients?.join(", ") || "-"
+                                        )}
+                                    </td>
+                                    <td>
+                                        {editingThisDish ? (
+                                            <textarea
+                                                name="description"
+                                                rows="2"
+                                                value={dishToEdit?.description || ""}
+                                                onChange={handleEditChange}
+                                            ></textarea>
+                                        ) : (
+                                            dish.description || "-"
+                                        )}
+                                    </td>
+                                    <td>
+                                        {editingThisDish ? (
+                                            <>
+                                                <button onClick={() => handleSaveDish(dish._id)}>Save</button>
+                                                <button onClick={handleCancelEdit}>Cancel</button>
+                                            </>
+                                        ) : (
+                                            <button onClick={() => startEditing(dish)}>Edit</button>
+                                        )}
+                                    </td>
+                                </tr>
+                            );
+                        })}
+                    </tbody>
+                </table>
+            ) : (
+                <p>No menu items found.</p>
+            )}
 
             {successMessage && <p className="success-message">{successMessage}</p>}
             {errorMessage && <p className="error-message">{errorMessage}</p>}
-            {isLoading && <p>Loading your dishes...</p>}
-
-            {/* Add Dish Form */}
-            <div className="add-dish-section">
-                <h2>Add a New Dish</h2>
-                <form onSubmit={handleAddDish} className="add-dish-form">
-                    <label htmlFor="name">Dish Name:</label>
-                    <input
-                        type="text"
-                        id="name"
-                        name="name"
-                        value={dishForm.name}
-                        onChange={handleFormChange}
-                        required
-                    />
-
-                    <label htmlFor="price">Price:</label>
-                    <input
-                        type="number"
-                        step="0.01"
-                        id="price"
-                        name="price"
-                        value={dishForm.price}
-                        onChange={handleFormChange}
-                        required
-                    />
-
-                    <label htmlFor="spiceLevel">Spice Level (0-5):</label>
-                    <input
-                        type="number"
-                        id="spiceLevel"
-                        name="spiceLevel"
-                        min="0"
-                        max="5"
-                        value={dishForm.spiceLevel}
-                        onChange={handleFormChange}
-                    />
-
-                    <label htmlFor="ingredients">Ingredients (comma separated):</label>
-                    <input
-                        type="text"
-                        id="ingredients"
-                        name="ingredients"
-                        placeholder="e.g. tomato, cheese, basil"
-                        value={dishForm.ingredients}
-                        onChange={handleFormChange}
-                    />
-
-                    <label htmlFor="description">Description:</label>
-                    <textarea
-                        id="description"
-                        name="description"
-                        value={dishForm.description}
-                        onChange={handleFormChange}
-                        rows="3"
-                    ></textarea>
-
-                    <label htmlFor="tags">Dietary Tags:</label>
-                    <select
-                        id="tags"
-                        name="tags"
-                        multiple
-                        value={dishForm.tags}
-                        onChange={handleFormChange}
-                    >
-                        {TAG_OPTIONS.map(tag => (
-                            <option key={tag} value={tag}>{tag}</option>
-                        ))}
-                    </select>
-
-                    <label htmlFor="image">Image URL:</label>
-                    <input
-                        type="url"
-                        id="image"
-                        name="image"
-                        placeholder="http://example.com/image.jpg"
-                        value={dishForm.image}
-                        onChange={handleFormChange}
-                    />
-
-                    <button type="submit">Add Dish</button>
-                </form>
-            </div>
-
-            {/* Dish Cards */}
-            <h2>Your Menu Items</h2>
-            {dishes.length > 0 ? (
-                <div className="dish-card-grid">
-                    {dishes.map((dish) => (
-                        <div className="dish-card" key={dish._id}>
-                            <div className="dish-image">
-                                {dish.image ? (
-                                    <img src={dish.image} alt={dish.name} />
-                                ) : (
-                                    <div className="placeholder-image">No Image</div>
-                                )}
-                            </div>
-                            <div className="dish-info">
-                                <h3>{dish.name}</h3>
-                                <p className="dish-price">${dish.price}</p>
-                                <p className="dish-tags">
-                                    {dish.tags && dish.tags.length > 0
-                                        ? dish.tags.join(", ")
-                                        : "No tags"}
-                                </p>
-                                <p className="dish-ingredients">
-                                    {dish.ingredients && dish.ingredients.length > 0
-                                        ? "Ingredients: " + dish.ingredients.join(", ")
-                                        : "No ingredients listed"}
-                                </p>
-                                <p className="dish-spice">
-                                    Spice Level: {dish.spiceLevel !== null ? dish.spiceLevel : "N/A"}
-                                </p>
-                                <p className="dish-description">
-                                    {dish.description || "No description provided."}
-                                </p>
-                            </div>
-                        </div>
-                    ))}
-                </div>
-            ) : (
-                <p>You currently have no dishes in your menu. Add one above!</p>
-            )}
         </div>
     );
 }

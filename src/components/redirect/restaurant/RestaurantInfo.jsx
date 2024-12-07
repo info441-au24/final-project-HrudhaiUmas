@@ -16,7 +16,11 @@ function RestaurantProfile() {
     const [errorMessage, setErrorMessage] = useState("");
     const [successMessage, setSuccessMessage] = useState("");
 
-    // For editing inline
+    // Profile editing states
+    const [isEditingProfile, setIsEditingProfile] = useState(false);
+    const [restaurantToEdit, setRestaurantToEdit] = useState(null);
+
+    // Dish editing states
     const [isEditing, setIsEditing] = useState(null); // store dish._id of currently editing row
     const [dishToEdit, setDishToEdit] = useState(null);
 
@@ -36,6 +40,7 @@ function RestaurantProfile() {
 
     const fetchRestaurantData = async () => {
         setIsLoading(true);
+        setErrorMessage("");
         try {
             const authResponse = await fetch("/auth/status", {
                 credentials: "include"
@@ -44,6 +49,20 @@ function RestaurantProfile() {
 
             if (authData.authenticated && authData.role === "restaurant") {
                 setRestaurant(authData);
+
+                // Also prepare restaurantToEdit in case we want to edit
+                setRestaurantToEdit({
+                    name: authData.name || "",
+                    email: authData.email || "",
+                    phone: authData.phone || "",
+                    address: authData.address || "",
+                    city: authData.city || "",
+                    state: authData.state || "",
+                    zip: authData.zip || "",
+                    cuisine: authData.cuisine || "",
+                    website: authData.website || "",
+                    description: authData.description || ""
+                });
 
                 // Fetch the restaurant's dishes
                 const dishesResponse = await fetch("/api/restaurants/dishes", {
@@ -202,6 +221,68 @@ function RestaurantProfile() {
         setDishToEdit(null);
     };
 
+    // Profile editing handlers
+    const handleProfileEditToggle = () => {
+        if (!isEditingProfile) {
+            // Start editing
+            setRestaurantToEdit({
+                name: restaurant.name || "",
+                email: restaurant.email || "",
+                phone: restaurant.phone || "",
+                address: restaurant.address || "",
+                city: restaurant.city || "",
+                state: restaurant.state || "",
+                zip: restaurant.zip || "",
+                cuisine: restaurant.cuisine || "",
+                website: restaurant.website || "",
+                description: restaurant.description || ""
+            });
+        }
+        setIsEditingProfile(!isEditingProfile);
+    };
+
+    const handleProfileChange = (e) => {
+        const { name, value } = e.target;
+        setRestaurantToEdit((prev) => ({ ...prev, [name]: value }));
+    };
+
+    const handleSaveProfile = async () => {
+        setErrorMessage("");
+        setSuccessMessage("");
+
+        try {
+            const response = await fetch("/api/restaurants", {
+                method: "PUT",
+                headers: { "Content-Type": "application/json" },
+                credentials: "include",
+                body: JSON.stringify(restaurantToEdit)
+            });
+
+            const data = await response.json();
+            if (response.ok) {
+                setSuccessMessage("Profile updated successfully!");
+                // Refetch restaurant data to show updated info
+                await fetchRestaurantData();
+                setIsEditingProfile(false);
+            } else {
+                setErrorMessage(data.error || "Failed to update profile.");
+            }
+        } catch (error) {
+            console.error("Error updating profile:", error);
+            setErrorMessage("An error occurred while updating the profile. Please try again.");
+        }
+
+        setTimeout(() => {
+            setErrorMessage("");
+            setSuccessMessage("");
+        }, 5000);
+    };
+
+    const handleCancelProfileEdit = () => {
+        setIsEditingProfile(false);
+        setRestaurantToEdit(null);
+    };
+
     if (isLoading) {
         return <div>Loading your restaurant profile...</div>;
     }
@@ -215,13 +296,53 @@ function RestaurantProfile() {
             <h1>Welcome, {restaurant?.username}!</h1>
             <h2>Your Restaurant Profile</h2>
             <div className="restaurant-info">
-                <p><strong>Name:</strong> {restaurant?.name}</p>
-                <p><strong>Email:</strong> {restaurant?.email}</p>
-                <p><strong>Phone:</strong> {restaurant?.phone}</p>
-                <p><strong>Address:</strong> {restaurant?.address}, {restaurant?.city}, {restaurant?.state} {restaurant?.zip}</p>
-                <p><strong>Cuisine:</strong> {restaurant?.cuisine}</p>
-                {restaurant?.website && <p><strong>Website:</strong> <a href={restaurant.website} target="_blank" rel="noopener noreferrer">{restaurant.website}</a></p>}
-                {restaurant?.description && <p><strong>Description:</strong> {restaurant.description}</p>}
+                {!isEditingProfile ? (
+                    <>
+                        <p><strong>Name:</strong> {restaurant?.name}</p>
+                        <p><strong>Email:</strong> {restaurant?.email}</p>
+                        <p><strong>Phone:</strong> {restaurant?.phone}</p>
+                        <p><strong>Address:</strong> {restaurant?.address}, {restaurant?.city}, {restaurant?.state} {restaurant?.zip}</p>
+                        <p><strong>Cuisine:</strong> {restaurant?.cuisine}</p>
+                        {restaurant?.website && <p><strong>Website:</strong> <a href={restaurant.website} target="_blank" rel="noopener noreferrer">{restaurant.website}</a></p>}
+                        {restaurant?.description && <p><strong>Description:</strong> {restaurant.description}</p>}
+                        <button onClick={handleProfileEditToggle}>Edit Profile</button>
+                    </>
+                ) : (
+                    <div className="edit-restaurant-form">
+                        <label>Name:</label>
+                        <input type="text" name="name" value={restaurantToEdit.name} onChange={handleProfileChange} />
+
+                        <label>Email:</label>
+                        <input type="email" name="email" value={restaurantToEdit.email} onChange={handleProfileChange} />
+
+                        <label>Phone:</label>
+                        <input type="text" name="phone" value={restaurantToEdit.phone} onChange={handleProfileChange} />
+
+                        <label>Address:</label>
+                        <input type="text" name="address" value={restaurantToEdit.address} onChange={handleProfileChange} />
+
+                        <label>City:</label>
+                        <input type="text" name="city" value={restaurantToEdit.city} onChange={handleProfileChange} />
+
+                        <label>State:</label>
+                        <input type="text" name="state" value={restaurantToEdit.state} onChange={handleProfileChange} />
+
+                        <label>ZIP:</label>
+                        <input type="text" name="zip" value={restaurantToEdit.zip} onChange={handleProfileChange} />
+
+                        <label>Cuisine:</label>
+                        <input type="text" name="cuisine" value={restaurantToEdit.cuisine} onChange={handleProfileChange} />
+
+                        <label>Website:</label>
+                        <input type="text" name="website" value={restaurantToEdit.website} onChange={handleProfileChange} />
+
+                        <label>Description:</label>
+                        <textarea name="description" rows="3" value={restaurantToEdit.description} onChange={handleProfileChange}></textarea>
+
+                        <button onClick={handleSaveProfile}>Save</button>
+                        <button onClick={handleCancelProfileEdit}>Cancel</button>
+                    </div>
+                )}
             </div>
 
             <h2>Your Dishes</h2>
@@ -414,7 +535,7 @@ function RestaurantProfile() {
             </form>
 
             {successMessage && <p className="success-message">{successMessage}</p>}
-            {errorMessage && <p className="error-message">{errorMessage}</p>}
+            {errorMessage && !isLoading && <p className="error-message">{errorMessage}</p>}
         </div>
     );
 }
