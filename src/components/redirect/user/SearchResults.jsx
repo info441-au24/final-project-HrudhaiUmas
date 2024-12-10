@@ -12,7 +12,7 @@ function SearchResults({ user }) {
     const [dietaryRestrictions, setDietaryRestrictions] = useState([]);
     const [spiceLevelRange, setSpiceLevelRange] = useState({ min: 1, max: 5 });
     const [excludedIngredients, setExcludedIngredients] = useState([]);
-    const [customIngredient, setCustomIngredient] = useState(""); // Custom ingredient input
+    const [customIngredient, setCustomIngredient] = useState("");
     const [allIngredients] = useState([
         "Chicken", "Beef", "Pork", "Tofu", "Tomato", "Fish", "Garlic", "Onion", 
         "Peanuts", "Mushrooms", "Dairy", "Eggs", "Gluten", "Soy", "Nuts"

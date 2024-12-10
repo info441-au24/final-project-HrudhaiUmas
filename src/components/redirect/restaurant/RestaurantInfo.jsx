@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import { Link } from "react-router-dom";
 
 const TAG_OPTIONS = [
     "Vegan",
@@ -453,7 +454,17 @@ function RestaurantProfile() {
                                                 <button onClick={handleCancelEdit}>Cancel</button>
                                             </>
                                         ) : (
-                                            <button onClick={() => startEditing(dish)}>Edit</button>
+                                            <>
+                                                <button onClick={() => startEditing(dish)}>
+                                                    Edit
+                                                </button>
+                                                <Link
+                                                    to={`/dish-details/${dish._id}`}
+                                                    className="view-dish-button"
+                                                >
+                                                    View
+                                                </Link>
+                                            </>
                                         )}
                                     </td>
                                 </tr>

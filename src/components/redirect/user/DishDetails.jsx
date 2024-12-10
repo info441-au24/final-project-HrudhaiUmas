@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { useParams } from 'react-router-dom';
+import { useParams } from "react-router-dom";
 
 const TAG_OPTIONS = [
     "Vegan",
@@ -7,23 +7,32 @@ const TAG_OPTIONS = [
     "Lactose Intolerant",
     "Gluten Intolerant",
     "Kosher",
-    "Halal"
+    "Halal",
 ];
 
 function DishDetails({ user }) {
     const urlParams = useParams();
     const dishID = urlParams.dish;
 
-    const [dishDetails, setDishDetails] = useState();
-    const [tags, setTags] = useState();
-    const [error, setError] = useState(null);
-    const [isLoading, setIsLoading] = useState(false);
+    const [dishDetails, setDishDetails] = useState(null);
+    const [tags, setTags] = useState([]);
+    const [reviews, setReviews] = useState([]);
     const [selectedTags, setSelectedTags] = useState([]);
     const [statusMessage, setStatusMessage] = useState("");
+    const [error, setError] = useState(null);
+    const [isLoading, setIsLoading] = useState(true);
+
+    const [comment, setComment] = useState("");
+    const [rating, setRating] = useState(5);
+
+    const [editReviewId, setEditReviewId] = useState(null);
+    const [editComment, setEditComment] = useState("");
+    const [editRating, setEditRating] = useState(5);
 
     useEffect(() => {
         const initializeFetch = async () => {
             await fetchDishDetails();
+            await fetchDishReviews();
         };
 
         initializeFetch();
@@ -31,139 +40,212 @@ function DishDetails({ user }) {
 
     const fetchDishDetails = async () => {
         try {
-            console.log("sending fetch request")
             const response = await fetch(`/api/dishes/details?id=${encodeURIComponent(dishID)}`);
-
-            if (!response.ok) {
-                throw new Error(`HTTP error! Status: ${response.status}`);
-            }
-
-            console.log("Getting the json response");
+            if (!response.ok) throw new Error("Failed to fetch dish details.");
             const data = await response.json();
 
-            const dataTags = data[0].tags;
-            console.log("dataTags: ", dataTags);
-
-            setTags(dataTags);
-
-            console.log("Saving data to state");
-            setDishDetails(data);
-        } catch (error) {
-            console.log("Error fetching dish details: ", error)
-            setError("Error fetching dish details. Please try again later.")
+            setDishDetails(data[0]);
+            setTags(data[0].tags || []);
+        } catch (err) {
+            setError(err.message);
         } finally {
             setIsLoading(false);
         }
-    }
-
-    if (error) {
-        return <div>{error}</div>
-    }
-
-    if (isLoading) {
-        return <div>Loading...</div>
-    }
-
-    const handleChange = (event) => {
-        const newSelected = Array.from(event.target.selectedOptions, (option) => option.value);
-        console.log("newSelected: ", newSelected);
-        setSelectedTags(newSelected);
     };
 
-    const handleTagSelection = async (event) => {
-        event.preventDefault();
-
-        let allTags = [];
-
-        for(let i = 0; i < tags.length; i++) {
-            allTags.push(tags[i]);
-        }
-
-        for(let i = 0; i < selectedTags.length; i++) {
-            allTags.push(selectedTags[i]);
-        }
-
-        console.log("All tags: ", allTags)
-
+    const fetchDishReviews = async () => {
         try {
-            const response = await fetch("/api/dishes/tag", {
+            const response = await fetch(`/api/reviews/${dishID}`);
+            if (!response.ok) throw new Error("Failed to fetch reviews.");
+            const data = await response.json();
+            setReviews(data.reviews || []);
+        } catch (err) {
+            console.error("Error fetching reviews:", err);
+        }
+    };
+
+    const handleReviewSubmit = async (event) => {
+        event.preventDefault();
+        try {
+            const response = await fetch(`/api/reviews/${dishID}`, {
                 method: "POST",
-                headers: {
-                    "Content-Type": "application/json",
-                },
-                body: JSON.stringify({
-                    _id: dishID,
-                    tags: allTags,
-                }),
+                headers: { "Content-Type": "application/json" },
                 credentials: "include",
+                body: JSON.stringify({ comment, rating }),
             });
 
             if (response.ok) {
-                setTags(allTags);
-                setStatusMessage("Tags updated successfully!");
+                setComment("");
+                setRating(5);
+                fetchDishReviews(); // Refresh reviews
             } else {
-                setSelectedTags(tags);
-                setStatusMessage("Failed to update tags.");
+                console.error("Failed to submit review.");
             }
         } catch (err) {
-            console.error("Error updating tags:", err);
-            setStatusMessage("Error updating tags.");
-            setSelectedTags(tags);
+            console.error("Error submitting review:", err);
         }
-
-        // Clear the status message after 5 seconds
-        setTimeout(() => setStatusMessage(""), 5000);
     };
 
+    const handleEditReviewSubmit = async (event) => {
+        event.preventDefault();
+        try {
+            const response = await fetch(`/api/reviews/${editReviewId}`, {
+                method: "PUT",
+                headers: { "Content-Type": "application/json" },
+                credentials: "include",
+                body: JSON.stringify({ comment: editComment, rating: editRating }),
+            });
+
+            if (response.ok) {
+                setEditReviewId(null);
+                setEditComment("");
+                setEditRating(5);
+                fetchDishReviews(); // Refresh reviews
+            } else {
+                console.error("Failed to edit review.");
+            }
+        } catch (err) {
+            console.error("Error editing review:", err);
+        }
+    };
+
+    const calculateAverageRating = () => {
+        if (reviews.length === 0) return "No ratings yet.";
+        const total = reviews.reduce((sum, review) => sum + review.rating, 0);
+        return (total / reviews.length).toFixed(1);
+    };
+
+    if (error) {
+        return <div>{error}</div>;
+    }
+
+    if (isLoading) {
+        return <div>Loading...</div>;
+    }
+
     return (
-        <>
-            {
-                dishDetails ? (
-                    <div className="recipe-details-container">
-                        <h3>{dishDetails[0].name}</h3>
-                        <h4>Restaurant: {dishDetails[0].restaurant}</h4>
-                        <h4>Location: {dishDetails[0].location}</h4>
+        <div className="dish-details-container">
+            {dishDetails ? (
+                <>
+                    <div className="dish-header">
+                        <h1>{dishDetails.name}</h1>
+                        <p className="restaurant-info">
+                            <strong>Restaurant:</strong> {dishDetails.restaurant}
+                        </p>
+                        <p className="location-info">
+                            <strong>Location:</strong> {dishDetails.location}
+                        </p>
+                        <p className="dish-description">{dishDetails.description}</p>
+                        <p className="average-rating">
+                            <strong>Average Rating:</strong> {calculateAverageRating()}
+                        </p>
+                    </div>
 
-                        <div className="tags-container">
-                            {
-                                tags.length > 0 
-                                ? (
-                                    tags.join(", ")
-                                ) : (
-                                    "This dish does not have any tags yet."
-                                )
-                            }
-                        </div>
-
-                        <div className="add-tags">
-                            <h4>Add tags for this dish:</h4>
-                            <h5>To select multiple tags, use the ctrl key on Windows and command key on Mac.</h5>
-                            <form onSubmit={handleTagSelection}>
-                                <select
-                                    multiple
-                                    onChange={handleChange}
-                                    value={selectedTags}
-                                    className="dietary-dropdown"
-                                >
-                                    {TAG_OPTIONS.map(option => (
-                                        <option key={option} value={option}>{option}</option>
-                                    ))}
-                                </select>
-                                <button className="update-button" type="submit">
-                                    Save Changes
-                                </button>
-                            </form>
-                            {statusMessage && (
-                                <p className="status-message">{statusMessage}</p> // Display status message
+                    <div className="reviews-section">
+                        <h2>Reviews</h2>
+                        <div className="reviews-list">
+                            {reviews.length > 0 ? (
+                                reviews.map((review) => (
+                                    <div key={review._id} className="review-item">
+                                        {editReviewId === review._id ? (
+                                            <form
+                                                onSubmit={handleEditReviewSubmit}
+                                                className="edit-review-form"
+                                            >
+                                                <textarea
+                                                    placeholder="Edit your review here..."
+                                                    value={editComment}
+                                                    onChange={(e) =>
+                                                        setEditComment(e.target.value)
+                                                    }
+                                                    required
+                                                />
+                                                <select
+                                                    value={editRating}
+                                                    onChange={(e) =>
+                                                        setEditRating(Number(e.target.value))
+                                                    }
+                                                    required
+                                                >
+                                                    {[1, 2, 3, 4, 5].map((r) => (
+                                                        <option key={r} value={r}>
+                                                            {r} Star{r > 1 && "s"}
+                                                        </option>
+                                                    ))}
+                                                </select>
+                                                <button type="submit" className="save-edit-button">
+                                                    Save
+                                                </button>
+                                                <button
+                                                    type="button"
+                                                    className="cancel-edit-button"
+                                                    onClick={() => setEditReviewId(null)}
+                                                >
+                                                    Cancel
+                                                </button>
+                                            </form>
+                                        ) : (
+                                            <>
+                                                <p>
+                                                    <strong>{review.user?.username}:</strong>{" "}
+                                                    {review.comment}
+                                                </p>
+                                                <p>Rating: {review.rating}/5</p>
+                                                {user &&
+                                                    user._id === review.user?._id && (
+                                                        <button
+                                                            className="edit-button"
+                                                            onClick={() => {
+                                                                setEditReviewId(review._id);
+                                                                setEditComment(review.comment);
+                                                                setEditRating(review.rating);
+                                                            }}
+                                                        >
+                                                            Edit
+                                                        </button>
+                                                    )}
+                                            </>
+                                        )}
+                                    </div>
+                                ))
+                            ) : (
+                                <p>No reviews yet. Be the first to review!</p>
                             )}
                         </div>
+
+                        {user && (
+                            <form onSubmit={handleReviewSubmit} className="review-form">
+                                <textarea
+                                    placeholder="Write your review here..."
+                                    value={comment}
+                                    onChange={(e) => setComment(e.target.value)}
+                                    required
+                                    className="review-textarea"
+                                />
+                                <select
+                                    value={rating}
+                                    onChange={(e) => setRating(Number(e.target.value))}
+                                    required
+                                    className="rating-dropdown"
+                                >
+                                    {[1, 2, 3, 4, 5].map((r) => (
+                                        <option key={r} value={r}>
+                                            {r} Star{r > 1 && "s"}
+                                        </option>
+                                    ))}
+                                </select>
+                                <button type="submit" className="submit-review-button">
+                                    Submit Review
+                                </button>
+                            </form>
+                        )}
                     </div>
-                ) : (
-                    <p>No details found for this dish.</p>
-                )
-            }
-        </>
-    )
+                </>
+            ) : (
+                <p>Dish details not found.</p>
+            )}
+        </div>
+    );
 }
 
 export default DishDetails;

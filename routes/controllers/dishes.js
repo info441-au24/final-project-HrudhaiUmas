@@ -191,4 +191,25 @@ router.get("/details", async (req, res) => {
     }
 })
 
+router.get("/search", async (req, res) => {
+    const { food } = req.query;
+
+    try {
+        const dishes = await models.Dish.find({ name: { $regex: food, $options: "i" } })
+            .populate("reviews");
+
+        const dishesWithRatings = dishes.map((dish) => {
+            return {
+                ...dish.toObject(),
+                averageRating: dish.averageRating,
+            };
+        });
+
+        res.json(dishesWithRatings);
+    } catch (err) {
+        console.error("Error fetching dishes:", err);
+        res.status(500).json({ error: "Failed to fetch dishes." });
+    }
+});
+
 export default router;

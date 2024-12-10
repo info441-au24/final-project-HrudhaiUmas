@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import { Link } from "react-router-dom";
 
 const DIETARY_OPTIONS = [
     "Vegan",
@@ -6,19 +7,20 @@ const DIETARY_OPTIONS = [
     "Lactose Intolerant",
     "Gluten Intolerant",
     "Kosher",
-    "Halal"
+    "Halal",
 ];
 
 function UserInfo({ user }) {
     const [savedRestrictions, setSavedRestrictions] = useState([]);
     const [selectedRestrictions, setSelectedRestrictions] = useState([]);
-    const [statusMessage, setStatusMessage] = useState(""); // New state for status messages
+    const [statusMessage, setStatusMessage] = useState("");
+    const [userReviews, setUserReviews] = useState([]);
 
     useEffect(() => {
         fetchDietaryRestrictions();
+        fetchUserReviews();
     }, []);
 
-    // Fetch dietary restrictions on load
     const fetchDietaryRestrictions = async () => {
         if (!user) return;
 
@@ -38,7 +40,25 @@ function UserInfo({ user }) {
         }
     };
 
-    // Handle dietary restrictions update
+    const fetchUserReviews = async () => {
+        if (!user) return;
+
+        try {
+            const response = await fetch(`/api/reviews/user/${user.username}`, {
+                credentials: "include",
+            });
+
+            if (response.ok) {
+                const data = await response.json();
+                setUserReviews(data.reviews || []);
+            } else {
+                console.error("Failed to fetch user reviews.");
+            }
+        } catch (err) {
+            console.error("Error fetching user reviews:", err);
+        }
+    };
+
     const handleDietarySelection = async (event) => {
         event.preventDefault();
 
@@ -68,11 +88,9 @@ function UserInfo({ user }) {
             setSelectedRestrictions(savedRestrictions);
         }
 
-        // Clear the status message after 5 seconds
         setTimeout(() => setStatusMessage(""), 5000);
     };
 
-    // Handle change in dietary restrictions selection
     const handleChange = (event) => {
         const newSelected = Array.from(event.target.selectedOptions, (option) => option.value);
         setSelectedRestrictions(newSelected);
@@ -100,8 +118,10 @@ function UserInfo({ user }) {
                             value={selectedRestrictions}
                             className="dietary-dropdown"
                         >
-                            {DIETARY_OPTIONS.map(option => (
-                                <option key={option} value={option}>{option}</option>
+                            {DIETARY_OPTIONS.map((option) => (
+                                <option key={option} value={option}>
+                                    {option}
+                                </option>
                             ))}
                         </select>
                         <button className="update-button" type="submit">
@@ -109,13 +129,37 @@ function UserInfo({ user }) {
                         </button>
                     </form>
                     {statusMessage && (
-                        <p className="status-message">{statusMessage}</p> // Display status message
+                        <p className="status-message">{statusMessage}</p>
                     )}
                 </div>
             </div>
             <div className="user-additional-section">
                 <h2>Your Activity</h2>
-                <p>Reviews and other activities will be displayed here.</p>
+                {userReviews.length > 0 ? (
+                    <table className="user-reviews-table">
+                        <thead>
+                            <tr>
+                                <th>Dish</th>
+                                <th>Comment</th>
+                                <th>Rating</th>
+                                <th>Date</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {userReviews.map((review) => (
+                                <tr key={review._id}>
+                                    <td>{review.dish?.name || "Unknown Dish"}</td>
+                                    <td>{review.comment}</td>
+                                    <td>{review.rating}/5</td>
+                                    <td>{new Date(review.createdAt).toLocaleDateString()}</td>
+                                </tr>
+                            ))}
+                        </tbody>
+                    </table>
+                ) : (
+                    <p>No activity yet. Start by posting your first review!</p>
+                )}
             </div>
         </div>
     );

@@ -50,7 +50,15 @@ const dishSchema = new mongoose.Schema({
     ingredients: [String],
     description: String,
     restaurant: { type: mongoose.Schema.Types.ObjectId, ref: "Restaurant" },
+    reviews: [{ type: mongoose.Schema.Types.ObjectId, ref: "Review" }] // New field
 });
+
+dishSchema.virtual("averageRating").get(function () {
+    if (!this.reviews || this.reviews.length === 0) return 0;
+    const totalRating = this.reviews.reduce((sum, review) => sum + review.rating, 0);
+    return (totalRating / this.reviews.length).toFixed(1);
+});
+
 models.Dish = mongoose.model("Dish", dishSchema);
 
 // Below is what the restaurantSchema looks like right now. We will need to change the menu array from a hard-coded String array to an array of
@@ -113,5 +121,14 @@ restaurantSchema.methods.verifyPassword = async function (password) {
     return crypto.timingSafeEqual(this.hashed_password, hashedPassword);
 };
 models.Restaurant = mongoose.model("Restaurant", restaurantSchema);
+
+const reviewSchema = new mongoose.Schema({
+    comment: { type: String, required: true },
+    rating: { type: Number, required: true, min: 1, max: 5 },
+    user: { type: mongoose.Schema.Types.ObjectId, ref: "User", required: true },
+    dish: { type: mongoose.Schema.Types.ObjectId, ref: "Dish", required: true },
+    createdAt: { type: Date, default: Date.now }
+});
+models.Review = mongoose.model("Review", reviewSchema);
 
 export default models;

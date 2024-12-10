@@ -1512,3 +1512,173 @@ footer {
     border-radius: 20px;
     font-size: 12px;
 }
+
+.dish-details-container {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 20px;
+    font-family: Arial, sans-serif;
+}
+
+.dish-header {
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+.dish-header h1 {
+    font-size: 2.5rem;
+    color: #333;
+}
+
+.restaurant-info,
+.location-info,
+.dish-description,
+.average-rating {
+    font-size: 1.2rem;
+    color: #555;
+}
+
+.tags-section,
+.reviews-section {
+    margin: 20px 0;
+}
+
+.tags-section h2,
+.reviews-section h2 {
+    font-size: 1.8rem;
+    color: #444;
+    margin-bottom: 10px;
+}
+
+.tags-list,
+.reviews-list {
+    font-size: 1.2rem;
+    color: #555;
+}
+
+.tags-form,
+.review-form {
+    margin-top: 15px;
+}
+
+.tags-dropdown,
+.review-textarea,
+.rating-dropdown {
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 10px;
+    font-size: 1rem;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+}
+
+.save-tags-button,
+.submit-review-button {
+    display: block;
+    width: 100%;
+    background-color: #ff6f61;
+    color: white;
+    border: none;
+    padding: 10px;
+    font-size: 1.2rem;
+    cursor: pointer;
+    border-radius: 5px;
+}
+
+.save-tags-button:hover,
+.submit-review-button:hover {
+    background-color: #ff9671;
+}
+
+.review-item {
+    border-bottom: 1px solid #ccc;
+    padding: 10px 0;
+}
+
+.review-item:last-child {
+    border-bottom: none;
+}
+
+.status-message {
+    margin-top: 10px;
+    font-size: 1rem;
+    color: #4caf50;
+}
+
+.user-reviews-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+    font-size: 16px;
+    text-align: left;
+}
+
+.user-reviews-table th, .user-reviews-table td {
+    border: 1px solid #ddd;
+    padding: 8px;
+}
+
+.user-reviews-table th {
+    background-color: #f4f4f4;
+    font-weight: bold;
+}
+
+.user-reviews-table tr:nth-child(even) {
+    background-color: #f9f9f9;
+}
+
+.user-reviews-table tr:hover {
+    background-color: #f1f1f1;
+}
+
+.view-dish-button {
+    display: inline-block;
+    padding: 5px 10px;
+    background-color: #007bff;
+    color: #fff;
+    text-decoration: none;
+    border-radius: 4px;
+    font-size: 14px;
+}
+
+.view-dish-button:hover {
+    background-color: #0056b3;
+}
+
+.restaurant-card-page {
+    max-width: 800px;
+    margin: 0 auto;
+    font-family: Arial, sans-serif;
+}
+
+.restaurant-info p {
+    margin: 5px 0;
+}
+
+.menu-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+}
+
+.menu-table th, .menu-table td {
+    border: 1px solid #ddd;
+    padding: 8px;
+    text-align: left;
+}
+
+.menu-table th {
+    background-color: #f4f4f4;
+    font-weight: bold;
+}
+
+.menu-table tr:hover {
+    background-color: #f9f9f9;
+}
+
+.error-message {
+    color: red;
+    font-weight: bold;
+    text-align: center;
+}
+
