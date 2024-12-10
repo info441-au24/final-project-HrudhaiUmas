@@ -105,6 +105,69 @@ router.put("/:reviewId", isAuthenticated, async (req, res) => {
     }
 });
 
+// Delete a review
+router.delete("/:reviewId", isAuthenticated, async (req, res) => {
+    const { reviewId } = req.params;
+    const userId = req.user._id;
+
+    try {
+        // Find the review
+        const review = await models.Review.findById(reviewId);
+        if (!review) {
+            return res.status(404).json({ status: "error", message: "Review not found." });
+        }
+
+        // Ensure the user owns the review
+        if (review.user.toString() !== userId.toString()) {
+            return res.status(403).json({ status: "error", message: "Unauthorized to delete this review." });
+        }
+
+        // Delete the review
+        await review.remove();
+
+        // Remove the review from the associated dish
+        await models.Dish.updateOne(
+            { _id: review.dish },
+            { $pull: { reviews: reviewId } }
+        );
+
+        res.status(200).json({ status: "success", message: "Review deleted successfully." });
+    } catch (err) {
+        console.error("Error deleting review:", err);
+        res.status(500).json({ status: "error", message: "Failed to delete review." });
+    }
+});
+
+
+// router.get("/user/:username", async (req, res) => {
+//     const { username } = req.params;
+
+//     try {
+//         const user = await models.User.findOne({ username });
+//         if (!user) {
+//             return res.status(404).json({ message: "User not found." });
+//         }
+
+//         const reviews = await models.Review.find({ user: user._id })
+//             .populate("dish", "name")
+//             .sort({ createdAt: -1 });
+
+//         res.json({
+//             status: "success",
+//             reviews: reviews.map((review) => ({
+//                 _id: review._id,
+//                 comment: review.comment,
+//                 rating: review.rating,
+//                 createdAt: review.createdAt,
+//                 dishName: review.dish?.name || "Unknown Dish",
+//             })),
+//         });
+//     } catch (err) {
+//         console.error("Error fetching user reviews:", err);
+//         res.status(500).json({ status: "error", message: "Error fetching reviews." });
+//     }
+// });
+
 router.get("/user/:username", async (req, res) => {
     const { username } = req.params;
 
@@ -114,10 +177,12 @@ router.get("/user/:username", async (req, res) => {
             return res.status(404).json({ message: "User not found." });
         }
 
+        // Populate the full dish object
         const reviews = await models.Review.find({ user: user._id })
-            .populate("dish", "name")
+            .populate("dish", "name _id") // Populate both the name and _id of the dish
             .sort({ createdAt: -1 });
 
+        // Return the full `dish` object in the response
         res.json({
             status: "success",
             reviews: reviews.map((review) => ({
@@ -125,7 +190,7 @@ router.get("/user/:username", async (req, res) => {
                 comment: review.comment,
                 rating: review.rating,
                 createdAt: review.createdAt,
-                dishName: review.dish?.name || "Unknown Dish",
+                dish: review.dish, // Return the full dish object
             })),
         });
     } catch (err) {
@@ -133,5 +198,6 @@ router.get("/user/:username", async (req, res) => {
         res.status(500).json({ status: "error", message: "Error fetching reviews." });
     }
 });
+
 
 export default router;

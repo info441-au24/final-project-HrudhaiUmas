@@ -167,29 +167,30 @@ router.post("/tag", async (req, res) => {
 router.get("/details", async (req, res) => {
     const { id } = req.query;
 
-    console.log("id:", id);
-
-    if(!id) {
+    if (!id) {
         return res.status(400).json({
             status: "error",
-            error: "Missing 'id' query parameter"
+            error: "Missing 'id' query parameter",
         });
     }
 
     try {
-        const dish = await models.Dish.find({_id: id });
+        const dish = await models.Dish.findById(id).populate("restaurant", "name address city state zip");
 
-        console.log(dish);
+        if (!dish) {
+            return res.status(404).json({ status: "error", message: "Dish not found." });
+        }
 
-        return res.json(dish);
+        res.json([dish]);
     } catch (error) {
         console.error("Error fetching dish details: ", error.message);
         res.status(500).json({
-            status: "error", 
-            error: error.message
+            status: "error",
+            error: error.message,
         });
     }
-})
+});
+
 
 router.get("/search", async (req, res) => {
     const { food } = req.query;

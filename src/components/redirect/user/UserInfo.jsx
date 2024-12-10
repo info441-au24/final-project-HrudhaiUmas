@@ -153,9 +153,20 @@ function UserInfo({ user }) {
                                     <td>{review.comment}</td>
                                     <td>{review.rating}/5</td>
                                     <td>{new Date(review.createdAt).toLocaleDateString()}</td>
+                                    <td>
+                                        {review.dish?._id && (
+                                            <Link
+                                                to={`/dish-details/${review.dish._id}`}
+                                                className="view-dish-button"
+                                            >
+                                                View Dish
+                                            </Link>
+                                        )}
+                                    </td>
                                 </tr>
                             ))}
                         </tbody>
+
                     </table>
                 ) : (
                     <p>No activity yet. Start by posting your first review!</p>

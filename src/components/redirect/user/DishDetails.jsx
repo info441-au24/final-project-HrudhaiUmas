@@ -130,16 +130,20 @@ function DishDetails({ user }) {
                     <div className="dish-header">
                         <h1>{dishDetails.name}</h1>
                         <p className="restaurant-info">
-                            <strong>Restaurant:</strong> {dishDetails.restaurant}
+                            <strong>Restaurant:</strong> {dishDetails.restaurant?.name || "Unknown Restaurant"}
                         </p>
                         <p className="location-info">
-                            <strong>Location:</strong> {dishDetails.location}
+                            <strong>Location:</strong>{" "}
+                            {dishDetails.restaurant
+                                ? `${dishDetails.restaurant.address || ""}, ${dishDetails.restaurant.city || ""}, ${dishDetails.restaurant.state || ""}, ${dishDetails.restaurant.zip || ""}`
+                                : "Location not available"}
                         </p>
                         <p className="dish-description">{dishDetails.description}</p>
                         <p className="average-rating">
                             <strong>Average Rating:</strong> {calculateAverageRating()}
                         </p>
                     </div>
+
 
                     <div className="reviews-section">
                         <h2>Reviews</h2>
