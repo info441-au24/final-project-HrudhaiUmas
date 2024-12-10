@@ -16,9 +16,9 @@ function DishDetails({ user }) {
 
     const [dishDetails, setDishDetails] = useState(null);
     const [tags, setTags] = useState([]);
-    const [reviews, setReviews] = useState([]);
     const [selectedTags, setSelectedTags] = useState([]);
     const [statusMessage, setStatusMessage] = useState("");
+    const [reviews, setReviews] = useState([]);
     const [error, setError] = useState(null);
     const [isLoading, setIsLoading] = useState(true);
 
@@ -77,12 +77,17 @@ function DishDetails({ user }) {
             if (response.ok) {
                 setComment("");
                 setRating(5);
-                fetchDishReviews(); // Refresh reviews
+                fetchDishReviews();
+                setStatusMessage("Review added successfully!");
             } else {
                 console.error("Failed to submit review.");
+                setStatusMessage("Failed to submit review.");
             }
         } catch (err) {
             console.error("Error submitting review:", err);
+            setStatusMessage("Error submitting review.");
+        } finally {
+            setTimeout(() => setStatusMessage(""), 5000);
         }
     };
 
@@ -100,12 +105,39 @@ function DishDetails({ user }) {
                 setEditReviewId(null);
                 setEditComment("");
                 setEditRating(5);
-                fetchDishReviews(); // Refresh reviews
+                fetchDishReviews();
+                setStatusMessage("Review updated successfully!");
             } else {
                 console.error("Failed to edit review.");
+                setStatusMessage("Failed to edit review.");
             }
         } catch (err) {
             console.error("Error editing review:", err);
+            setStatusMessage("Error editing review.");
+        } finally {
+            setTimeout(() => setStatusMessage(""), 5000);
+        }
+    };
+
+    const handleDeleteReview = async (reviewId) => {
+        try {
+            const response = await fetch(`/api/reviews/${reviewId}`, {
+                method: "DELETE",
+                credentials: "include",
+            });
+
+            if (response.ok) {
+                fetchDishReviews();
+                setStatusMessage("Review deleted successfully!");
+            } else {
+                console.error("Failed to delete review.");
+                setStatusMessage("Failed to delete review.");
+            }
+        } catch (err) {
+            console.error("Error deleting review:", err);
+            setStatusMessage("Error deleting review.");
+        } finally {
+            setTimeout(() => setStatusMessage(""), 5000);
         }
     };
 
@@ -142,11 +174,16 @@ function DishDetails({ user }) {
                         <p className="average-rating">
                             <strong>Average Rating:</strong> {calculateAverageRating()}
                         </p>
+                        {tags.length > 0 && (
+                            <p className="dish-tags">
+                                <strong>Tags:</strong> {tags.join(", ")}
+                            </p>
+                        )}
                     </div>
-
 
                     <div className="reviews-section">
                         <h2>Reviews</h2>
+                        {statusMessage && <p className="status-message">{statusMessage}</p>}
                         <div className="reviews-list">
                             {reviews.length > 0 ? (
                                 reviews.map((review) => (
@@ -197,16 +234,26 @@ function DishDetails({ user }) {
                                                 <p>Rating: {review.rating}/5</p>
                                                 {user &&
                                                     user._id === review.user?._id && (
-                                                        <button
-                                                            className="edit-button"
-                                                            onClick={() => {
-                                                                setEditReviewId(review._id);
-                                                                setEditComment(review.comment);
-                                                                setEditRating(review.rating);
-                                                            }}
-                                                        >
-                                                            Edit
-                                                        </button>
+                                                        <>
+                                                            <button
+                                                                className="edit-button"
+                                                                onClick={() => {
+                                                                    setEditReviewId(review._id);
+                                                                    setEditComment(review.comment);
+                                                                    setEditRating(review.rating);
+                                                                }}
+                                                            >
+                                                                Edit
+                                                            </button>
+                                                            <button
+                                                                className="delete-button"
+                                                                onClick={() =>
+                                                                    handleDeleteReview(review._id)
+                                                                }
+                                                            >
+                                                                Delete
+                                                            </button>
+                                                        </>
                                                     )}
                                             </>
                                         )}

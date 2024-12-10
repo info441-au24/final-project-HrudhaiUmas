@@ -111,21 +111,17 @@ router.delete("/:reviewId", isAuthenticated, async (req, res) => {
     const userId = req.user._id;
 
     try {
-        // Find the review
         const review = await models.Review.findById(reviewId);
         if (!review) {
             return res.status(404).json({ status: "error", message: "Review not found." });
         }
 
-        // Ensure the user owns the review
         if (review.user.toString() !== userId.toString()) {
             return res.status(403).json({ status: "error", message: "Unauthorized to delete this review." });
         }
 
-        // Delete the review
-        await review.remove();
+        await models.Review.findByIdAndDelete(reviewId);
 
-        // Remove the review from the associated dish
         await models.Dish.updateOne(
             { _id: review.dish },
             { $pull: { reviews: reviewId } }
@@ -137,6 +133,7 @@ router.delete("/:reviewId", isAuthenticated, async (req, res) => {
         res.status(500).json({ status: "error", message: "Failed to delete review." });
     }
 });
+
 
 
 // router.get("/user/:username", async (req, res) => {
